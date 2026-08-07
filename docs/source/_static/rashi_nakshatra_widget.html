@@ -1,0 +1,323 @@
+<div class="rn-root" id="rnWidget">
+  <style>
+    #rnWidget {
+      --rn-bg: #0f172a;
+      --rn-panel: #16213e;
+      --rn-border: #2a3655;
+      --rn-text: #e2e8f0;
+      --rn-muted: #94a3b8;
+      --rn-accent: #38bdf8;
+      --rn-good: #4ade80;
+      --rn-warn: #fbbf24;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--rn-bg);
+      color: var(--rn-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #rnWidget * { box-sizing: border-box; }
+    #rnWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #fff; }
+    #rnWidget .rn-sub { color: var(--rn-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .rn-body { display: flex; gap: 20px; min-width: 1040px; }
+    .rn-wheel-col { flex: 0 0 auto; }
+    .rn-detail-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+
+    .rn-wheel-wrap { background: var(--rn-panel); border: 1px solid var(--rn-border); border-radius: 10px; padding: 16px; }
+    .rn-wheel-hint { text-align: center; font-size: 0.72rem; color: var(--rn-muted); margin-top: 8px; }
+
+    .rn-card { background: var(--rn-panel); border: 1px solid var(--rn-border); border-radius: 10px; padding: 14px 16px; }
+    .rn-card-title { font-size: 0.72rem; font-weight: 700; color: var(--rn-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+    .rn-lon { font-family: ui-monospace, monospace; font-size: 1.1rem; color: var(--rn-warn); font-weight: 700; }
+
+    .rn-info-row { display: flex; gap: 16px; }
+    .rn-info-box { flex: 1; background: var(--rn-bg); border: 1px solid var(--rn-border); border-radius: 8px; padding: 10px 12px; }
+    .rn-info-box .rn-symbol { font-size: 1.6rem; }
+    .rn-info-box .rn-name { font-size: 0.95rem; font-weight: 700; color: #fff; margin: 4px 0 2px; }
+    .rn-info-box .rn-meta { font-size: 0.74rem; color: var(--rn-muted); line-height: 1.5; }
+    .rn-info-box .rn-meta b { color: var(--rn-text); }
+
+    table.rn-table { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
+    table.rn-table th { text-align: left; color: var(--rn-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--rn-border); font-size: 0.66rem; text-transform: uppercase; }
+    table.rn-table td { padding: 5px 8px; border-bottom: 1px solid rgba(42,54,85,0.5); font-family: ui-monospace, monospace; vertical-align: middle; }
+    .rn-pada-chip { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 0.68rem; margin: 1px; background: rgba(56,189,248,0.14); color: var(--rn-accent); }
+    .rn-row-active { background: rgba(251,191,36,0.08); }
+
+    .rn-rashi-mini { display: flex; flex-wrap: wrap; gap: 6px; }
+    .rn-rashi-chip { background: var(--rn-bg); border: 1px solid var(--rn-border); border-radius: 6px; padding: 6px 10px; font-size: 0.74rem; display: flex; align-items: center; gap: 6px; }
+    .rn-rashi-chip b { color: #fff; }
+
+    .rn-note { font-size: 0.76rem; color: var(--rn-muted); line-height: 1.5; margin-top: 4px; }
+  </style>
+
+  <h3>Rashis, Nakshatras &amp; Padas: Play With It</h3>
+  <div class="rn-sub">Drag the pointer around the wheel (or click anywhere on it) to see exactly which rashi, nakshatra, and pada any point in the zodiac falls in -- and their lords.</div>
+
+  <div class="rn-body">
+    <div class="rn-wheel-col">
+      <div class="rn-wheel-wrap">
+        <svg id="rnSvg" width="380" height="380" viewBox="0 0 380 380"></svg>
+        <div class="rn-wheel-hint">Drag the pointer, or click anywhere on the ring</div>
+      </div>
+    </div>
+    <div class="rn-detail-col">
+      <div class="rn-card">
+        <div class="rn-card-title">Position</div>
+        <div class="rn-lon" id="rnLonText"></div>
+      </div>
+      <div class="rn-info-row">
+        <div class="rn-info-box">
+          <div class="rn-card-title">Rashi</div>
+          <div class="rn-symbol" id="rnRashiSymbol"></div>
+          <div class="rn-name" id="rnRashiName"></div>
+          <div class="rn-meta" id="rnRashiMeta"></div>
+        </div>
+        <div class="rn-info-box">
+          <div class="rn-card-title">Nakshatra</div>
+          <div class="rn-symbol" id="rnNakSymbol"></div>
+          <div class="rn-name" id="rnNakName"></div>
+          <div class="rn-meta" id="rnNakMeta"></div>
+        </div>
+        <div class="rn-info-box">
+          <div class="rn-card-title">Pada</div>
+          <div class="rn-symbol" id="rnPadaNum"></div>
+          <div class="rn-meta" id="rnPadaMeta"></div>
+        </div>
+      </div>
+      <div class="rn-card">
+        <div class="rn-card-title">The 12 rashis and their lords</div>
+        <div class="rn-rashi-mini" id="rnRashiMini"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rn-card" style="margin-top:16px; min-width:1040px;">
+    <div class="rn-card-title">All 27 nakshatras, pada by pada</div>
+    <table class="rn-table" id="rnFullTable">
+      <thead><tr><th>#</th><th>Nakshatra</th><th>Symbol</th><th>Lord</th><th>Pada 1</th><th>Pada 2</th><th>Pada 3</th><th>Pada 4</th></tr></thead>
+      <tbody id="rnTableBody"></tbody>
+    </table>
+  </div>
+  <div class="rn-note" id="rnNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('rnWidget');
+
+    var RASHIS = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+    var RASHI_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+    var RASHI_LORDS = ['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Mars','Jupiter','Saturn','Saturn','Jupiter'];
+
+    var NAKSHATRAS = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha',
+      'Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha',
+      'Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+    var NAK_SYMBOLS = ["Horse's head","Yoni","Razor / flame","Cart / chariot","Deer's head","Teardrop / gem",
+      "Bow & quiver","Udder / lotus","Coiled serpent","Royal throne","Front legs of a bed","Back legs of a bed",
+      "Palm of a hand","Bright jewel","Young shoot / coral","Triumphal arch","Lotus","Circular earring",
+      "Bundle of roots","Elephant tusk (front)","Elephant tusk (back)","Ear","Drum","Empty circle",
+      "Front legs of a cot","Back legs of a cot / twins","Fish"];
+    var LORD_CYCLE = ['Ketu','Venus','Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury'];
+    var NAKSHATRA_LORDS = [];
+    for (var i = 0; i < 27; i++) NAKSHATRA_LORDS.push(LORD_CYCLE[i % 9]);
+
+    var RASHI_SPAN = 30;
+    var NAK_SPAN = 360 / 27;
+    var PADA_SPAN = NAK_SPAN / 4;
+
+    function norm(lon) {
+      var x = lon % 360;
+      if (x < 0) x += 360;
+      return x;
+    }
+
+    function classify(lonDeg) {
+      var lon = norm(lonDeg);
+      var rashiIdx = Math.floor(lon / RASHI_SPAN) % 12;
+      var nakIdx = Math.floor(lon / NAK_SPAN) % 27;
+      var nakStart = nakIdx * NAK_SPAN;
+      var withinNak = lon - nakStart;
+      var padaNum = Math.min(4, Math.floor(withinNak / PADA_SPAN) + 1);
+      var rashiDeg = lon - rashiIdx * RASHI_SPAN;
+
+      return {
+        lon: lon,
+        rashiIdx: rashiIdx,
+        rashi: RASHIS[rashiIdx],
+        rashiLord: RASHI_LORDS[rashiIdx],
+        rashiDeg: rashiDeg,
+        nakIdx: nakIdx,
+        nakshatra: NAKSHATRAS[nakIdx],
+        nakshatraLord: NAKSHATRA_LORDS[nakIdx],
+        pada: padaNum
+      };
+    }
+
+    function fmtDegMin(d) {
+      var deg = Math.floor(d);
+      var min = Math.round((d - deg) * 60);
+      if (min === 60) { min = 0; deg += 1; }
+      return deg + '°' + (min < 10 ? '0' : '') + min + "'";
+    }
+
+    // ---------------- SVG wheel ----------------
+    var svg = document.getElementById('rnSvg');
+    var CX = 190, CY = 190, R_OUTER = 170, R_RASHI_IN = 130, R_TICK = 122, R_LABEL = 150, R_HANDLE = 170;
+
+    function polar(cx, cy, r, angleDeg) {
+      var rad = (angleDeg - 90) * Math.PI / 180; // 0 deg at top, clockwise
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function arcPath(r1, r2, a1, a2) {
+      var p1 = polar(CX, CY, r2, a1), p2 = polar(CX, CY, r2, a2);
+      var p3 = polar(CX, CY, r1, a2), p4 = polar(CX, CY, r1, a1);
+      var large = (a2 - a1) > 180 ? 1 : 0;
+      return 'M ' + p1.x + ' ' + p1.y +
+        ' A ' + r2 + ' ' + r2 + ' 0 ' + large + ' 1 ' + p2.x + ' ' + p2.y +
+        ' L ' + p3.x + ' ' + p3.y +
+        ' A ' + r1 + ' ' + r1 + ' 0 ' + large + ' 0 ' + p4.x + ' ' + p4.y + ' Z';
+    }
+
+    function svgEl(tag, attrs) {
+      var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (var k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    }
+
+    // rashi wedges
+    var rashiWedges = [];
+    for (var ri = 0; ri < 12; ri++) {
+      var a1 = ri * 30, a2 = a1 + 30;
+      var wedge = svgEl('path', {
+        d: arcPath(R_RASHI_IN, R_OUTER, a1, a2),
+        fill: ri % 2 === 0 ? '#1e2a4a' : '#182240',
+        stroke: '#2a3655', 'stroke-width': '1'
+      });
+      svg.appendChild(wedge);
+      rashiWedges.push(wedge);
+      var mid = polar(CX, CY, R_LABEL, a1 + 15);
+      var label = svgEl('text', { x: mid.x, y: mid.y, fill: '#e2e8f0', 'font-size': '18', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
+      label.textContent = RASHI_SYMBOLS[ri];
+      svg.appendChild(label);
+    }
+
+    // nakshatra tick marks
+    for (var ni = 0; ni < 27; ni++) {
+      var ta = ni * NAK_SPAN;
+      var t1 = polar(CX, CY, R_RASHI_IN - 4, ta);
+      var t2 = polar(CX, CY, R_RASHI_IN + 4, ta);
+      svg.appendChild(svgEl('line', { x1: t1.x, y1: t1.y, x2: t2.x, y2: t2.y, stroke: '#64748b', 'stroke-width': '1' }));
+    }
+
+    // active nakshatra highlight arc (updated on drag)
+    var nakHighlight = svgEl('path', { fill: 'rgba(251,191,36,0.28)', stroke: 'none' });
+    svg.insertBefore(nakHighlight, svg.firstChild.nextSibling);
+
+    // center + handle
+    svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: R_RASHI_IN - 8, fill: '#0f172a', stroke: '#2a3655' }));
+    var handleLine = svgEl('line', { x1: CX, y1: CY, x2: CX, y2: CY - R_HANDLE, stroke: '#38bdf8', 'stroke-width': '2' });
+    var handleDot = svgEl('circle', { cx: CX, cy: CY - R_HANDLE, r: 8, fill: '#38bdf8', stroke: '#041322', 'stroke-width': '2', style: 'cursor:grab;' });
+    svg.appendChild(handleLine);
+    svg.appendChild(handleDot);
+
+    // ---------------- state + rendering ----------------
+    var lon = 15; // start mid-Mesha
+    var rashiMetaEl = document.getElementById('rnRashiMeta');
+    var rashiSymbolEl = document.getElementById('rnRashiSymbol');
+    var rashiNameEl = document.getElementById('rnRashiName');
+    var nakMetaEl = document.getElementById('rnNakMeta');
+    var nakSymbolEl = document.getElementById('rnNakSymbol');
+    var nakNameEl = document.getElementById('rnNakName');
+    var padaNumEl = document.getElementById('rnPadaNum');
+    var padaMetaEl = document.getElementById('rnPadaMeta');
+    var lonTextEl = document.getElementById('rnLonText');
+    var tableBody = document.getElementById('rnTableBody');
+
+    function render() {
+      var c = classify(lon);
+
+      var pt = polar(CX, CY, R_HANDLE, lon);
+      handleLine.setAttribute('x2', pt.x);
+      handleLine.setAttribute('y2', pt.y);
+      handleDot.setAttribute('cx', pt.x);
+      handleDot.setAttribute('cy', pt.y);
+
+      var nakStart = c.nakIdx * NAK_SPAN;
+      nakHighlight.setAttribute('d', arcPath(R_RASHI_IN - 8, R_RASHI_IN, nakStart, nakStart + NAK_SPAN));
+
+      rashiWedges.forEach(function(w, i) {
+        w.setAttribute('fill', i === c.rashiIdx ? '#2a3f6b' : (i % 2 === 0 ? '#1e2a4a' : '#182240'));
+        w.setAttribute('stroke', i === c.rashiIdx ? '#38bdf8' : '#2a3655');
+      });
+
+      lonTextEl.textContent = fmtDegMin(c.rashiDeg) + ' ' + c.rashi + '  (' + fmtDegMin(c.lon) + ' absolute)';
+
+      rashiSymbolEl.textContent = RASHI_SYMBOLS[c.rashiIdx];
+      rashiNameEl.textContent = c.rashi;
+      rashiMetaEl.innerHTML = 'Lord: <b>' + c.rashiLord + '</b><br>' + fmtDegMin(c.rashiDeg) + ' into this rashi';
+
+      nakSymbolEl.textContent = '#' + (c.nakIdx + 1);
+      nakNameEl.textContent = c.nakshatra;
+      nakMetaEl.innerHTML = 'Lord: <b>' + c.nakshatraLord + '</b><br>Symbol: ' + NAK_SYMBOLS[c.nakIdx];
+
+      padaNumEl.textContent = c.pada;
+      padaMetaEl.innerHTML = 'of 4, within ' + c.nakshatra;
+
+      Array.prototype.forEach.call(tableBody.children, function(tr, i) {
+        tr.classList.toggle('rn-row-active', i === c.nakIdx);
+      });
+    }
+
+    function setFromAngle(clientX, clientY) {
+      var rect = svg.getBoundingClientRect();
+      var scale = 380 / rect.width;
+      var x = (clientX - rect.left) * scale - CX;
+      var y = (clientY - rect.top) * scale - CY;
+      var angle = Math.atan2(y, x) * 180 / Math.PI + 90;
+      if (angle < 0) angle += 360;
+      lon = angle;
+      render();
+    }
+
+    var dragging = false;
+    svg.addEventListener('mousedown', function(e) { dragging = true; e.preventDefault(); setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', function(e) { if (dragging) setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', function() { dragging = false; });
+    svg.addEventListener('touchstart', function(e) {
+      dragging = true;
+      var t = e.touches[0];
+      setFromAngle(t.clientX, t.clientY);
+    }, { passive: true });
+    svg.addEventListener('touchmove', function(e) {
+      if (!dragging) return;
+      var t = e.touches[0];
+      setFromAngle(t.clientX, t.clientY);
+    }, { passive: true });
+    window.addEventListener('touchend', function() { dragging = false; });
+
+    // ---------------- rashi lord summary ----------------
+    var rashiMiniEl = document.getElementById('rnRashiMini');
+    rashiMiniEl.innerHTML = RASHIS.map(function(r, i) {
+      return '<div class="rn-rashi-chip">' + RASHI_SYMBOLS[i] + ' <b>' + r + '</b> &mdash; ' + RASHI_LORDS[i] + '</div>';
+    }).join('');
+
+    // ---------------- full 27-row pada table ----------------
+    tableBody.innerHTML = NAKSHATRAS.map(function(name, ni) {
+      var padaCells = '';
+      for (var p = 0; p < 4; p++) {
+        var midLon = ni * NAK_SPAN + p * PADA_SPAN + PADA_SPAN / 2;
+        var rIdx = Math.floor(norm(midLon) / RASHI_SPAN) % 12;
+        padaCells += '<td><span class="rn-pada-chip">' + RASHI_SYMBOLS[rIdx] + ' ' + RASHIS[rIdx] + '</span></td>';
+      }
+      return '<tr><td>' + (ni + 1) + '</td><td>' + name + '</td><td>' + NAK_SYMBOLS[ni] + '</td><td>' + NAKSHATRA_LORDS[ni] + '</td>' + padaCells + '</tr>';
+    }).join('');
+
+    document.getElementById('rnNote').textContent = 'Rashi and nakshatra order, the fixed 9-lord nakshatra cycle, and rashi rulerships follow the standard Parashari framework shared across Jyotisha schools, including Kerala. Nakshatra symbol descriptions follow the most commonly cited tradition -- if your reference texts describe a different symbol or deity for any nakshatra, trust your text over this page.';
+
+    render();
+  })();
+  </script>
+</div>
