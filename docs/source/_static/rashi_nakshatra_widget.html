@@ -9,6 +9,7 @@
       --rn-accent: #38bdf8;
       --rn-good: #4ade80;
       --rn-warn: #fbbf24;
+      --rn-bad: #f87171;
       font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--rn-bg);
       color: var(--rn-text);
@@ -22,7 +23,7 @@
     #rnWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #fff; }
     #rnWidget .rn-sub { color: var(--rn-muted); font-size: 0.85rem; margin-bottom: 16px; }
 
-    .rn-body { display: flex; gap: 20px; min-width: 1040px; }
+    .rn-body { display: flex; gap: 20px; min-width: 1080px; }
     .rn-wheel-col { flex: 0 0 auto; }
     .rn-detail-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 
@@ -36,25 +37,34 @@
     .rn-info-row { display: flex; gap: 16px; }
     .rn-info-box { flex: 1; background: var(--rn-bg); border: 1px solid var(--rn-border); border-radius: 8px; padding: 10px 12px; }
     .rn-info-box .rn-symbol { font-size: 1.6rem; }
-    .rn-info-box .rn-name { font-size: 0.95rem; font-weight: 700; color: #fff; margin: 4px 0 2px; }
+    .rn-info-box .rn-name { font-size: 1.05rem; font-weight: 700; color: #fff; margin: 4px 0 0; }
+    .rn-info-box .rn-name-en { font-size: 0.72rem; color: var(--rn-muted); margin-bottom: 4px; }
     .rn-info-box .rn-meta { font-size: 0.74rem; color: var(--rn-muted); line-height: 1.5; }
     .rn-info-box .rn-meta b { color: var(--rn-text); }
+    .rn-gandantham-flag { display: inline-block; margin-top: 6px; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: rgba(248,113,113,0.18); color: var(--rn-bad); }
 
-    table.rn-table { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
-    table.rn-table th { text-align: left; color: var(--rn-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--rn-border); font-size: 0.66rem; text-transform: uppercase; }
+    table.rn-table { width: 100%; border-collapse: collapse; font-size: 0.73rem; }
+    table.rn-table th { text-align: left; color: var(--rn-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--rn-border); font-size: 0.64rem; text-transform: uppercase; }
     table.rn-table td { padding: 5px 8px; border-bottom: 1px solid rgba(42,54,85,0.5); font-family: ui-monospace, monospace; vertical-align: middle; }
     .rn-pada-chip { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 0.68rem; margin: 1px; background: rgba(56,189,248,0.14); color: var(--rn-accent); }
+    .rn-pada-chip.rn-gandantham { background: rgba(248,113,113,0.22); color: var(--rn-bad); font-weight: 700; }
     .rn-row-active { background: rgba(251,191,36,0.08); }
+    .rn-split-tag { font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(74,222,128,0.16); color: var(--rn-good); white-space: nowrap; }
+    .rn-split-none { color: var(--rn-muted); }
 
     .rn-rashi-mini { display: flex; flex-wrap: wrap; gap: 6px; }
     .rn-rashi-chip { background: var(--rn-bg); border: 1px solid var(--rn-border); border-radius: 6px; padding: 6px 10px; font-size: 0.74rem; display: flex; align-items: center; gap: 6px; }
     .rn-rashi-chip b { color: #fff; }
+    .rn-rashi-chip .rn-chip-en { color: var(--rn-muted); font-size: 0.68rem; }
 
     .rn-note { font-size: 0.76rem; color: var(--rn-muted); line-height: 1.5; margin-top: 4px; }
+    .rn-legend { display: flex; gap: 16px; font-size: 0.7rem; color: var(--rn-muted); margin-top: 8px; flex-wrap: wrap; }
+    .rn-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .rn-legend-dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
   </style>
 
-  <h3>Rashis, Nakshatras &amp; Padas: Play With It</h3>
-  <div class="rn-sub">Drag the pointer around the wheel (or click anywhere on it) to see exactly which rashi, nakshatra, and pada any point in the zodiac falls in -- and their lords.</div>
+  <h3>രാശികളും നക്ഷത്രങ്ങളും പാദങ്ങളും: Play With It</h3>
+  <div class="rn-sub">Drag the pointer around the wheel (or click anywhere on it) to see any longitude's രാശി (rashi), നക്ഷത്രം (nakshatra), and പാദം (pada) update live -- along with both lords, and whether that point falls in an "atta" split or a ഗണ്ഡാന്തം (Gandantham) junction.</div>
 
   <div class="rn-body">
     <div class="rn-wheel-col">
@@ -70,36 +80,47 @@
       </div>
       <div class="rn-info-row">
         <div class="rn-info-box">
-          <div class="rn-card-title">Rashi</div>
+          <div class="rn-card-title">രാശി (Rashi)</div>
           <div class="rn-symbol" id="rnRashiSymbol"></div>
           <div class="rn-name" id="rnRashiName"></div>
+          <div class="rn-name-en" id="rnRashiNameEn"></div>
           <div class="rn-meta" id="rnRashiMeta"></div>
         </div>
         <div class="rn-info-box">
-          <div class="rn-card-title">Nakshatra</div>
+          <div class="rn-card-title">നക്ഷത്രം (Nakshatra)</div>
           <div class="rn-symbol" id="rnNakSymbol"></div>
           <div class="rn-name" id="rnNakName"></div>
+          <div class="rn-name-en" id="rnNakNameEn"></div>
           <div class="rn-meta" id="rnNakMeta"></div>
         </div>
         <div class="rn-info-box">
-          <div class="rn-card-title">Pada</div>
+          <div class="rn-card-title">പാദം (Pada)</div>
           <div class="rn-symbol" id="rnPadaNum"></div>
           <div class="rn-meta" id="rnPadaMeta"></div>
+          <div id="rnGandanthamFlag"></div>
         </div>
       </div>
       <div class="rn-card">
-        <div class="rn-card-title">The 12 rashis and their lords</div>
+        <div class="rn-card-title">The 12 രാശികൾ and their lords</div>
         <div class="rn-rashi-mini" id="rnRashiMini"></div>
       </div>
     </div>
   </div>
 
-  <div class="rn-card" style="margin-top:16px; min-width:1040px;">
-    <div class="rn-card-title">All 27 nakshatras, pada by pada</div>
+  <div class="rn-card" style="margin-top:16px; min-width:1080px;">
+    <div class="rn-card-title">All 27 നക്ഷത്രങ്ങൾ, pada by pada</div>
     <table class="rn-table" id="rnFullTable">
-      <thead><tr><th>#</th><th>Nakshatra</th><th>Symbol</th><th>Lord</th><th>Pada 1</th><th>Pada 2</th><th>Pada 3</th><th>Pada 4</th></tr></thead>
+      <thead><tr><th>#</th><th>Nakshatra</th><th>Symbol</th><th>Lord</th><th>Split</th><th>Pada 1</th><th>Pada 2</th><th>Pada 3</th><th>Pada 4</th></tr></thead>
       <tbody id="rnTableBody"></tbody>
     </table>
+    <div class="rn-legend">
+      <span><i class="rn-legend-dot" style="background:rgba(56,189,248,0.5)"></i>rashi at this pada</span>
+      <span><i class="rn-legend-dot" style="background:rgba(248,113,113,0.6)"></i>ഗണ്ഡാന്തം (Gandantham) pada</span>
+    </div>
+  </div>
+  <div class="rn-card" style="margin-top:16px; min-width:1080px;">
+    <div class="rn-card-title">അട്ട (Atta) split nakshatras and ഗണ്ഡാന്തം (Gandantham) junctions</div>
+    <div id="rnAttaGandanthamSummary"></div>
   </div>
   <div class="rn-note" id="rnNote"></div>
 
@@ -107,11 +128,18 @@
   (function() {
     var root = document.getElementById('rnWidget');
 
-    var RASHIS = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
-    var RASHI_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
-    var RASHI_LORDS = ['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Mars','Jupiter','Saturn','Saturn','Jupiter'];
+    var RASHIS_ML = ['മേടം','ഇടവം','മിഥുനം','കർക്കടകം','ചിങ്ങം','കന്നി','തുലാം','വൃശ്ചികം','ധനു','മകരം','കുംഭം','മീനം'];
+    var RASHIS_EN = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+    var RASHI_ANIMAL = ['Ram','Bull','A couple','Crab','Lion',"Maiden with a stalk of grain",'Scales','Scorpion','Archer with a bow',
+      'Makara (crocodile-like sea-creature)','Water-bearer (pot)','A pair of fish'];
+    var RASHI_EMOJI = ['🐏','🐂','👫','🦀','🦁','👩','⚖️','🦂','🏹','🐊','🏺','🐟'];
+    var RASHI_LORDS_EN = ['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Mars','Jupiter','Saturn','Saturn','Jupiter'];
+    var RASHI_LORDS_ML = ['ചൊവ്വ','ശുക്രൻ','ബുധൻ','ചന്ദ്രൻ','സൂര്യൻ','ബുധൻ','ശുക്രൻ','ചൊവ്വ','വ്യാഴം','ശനി','ശനി','വ്യാഴം'];
 
-    var NAKSHATRAS = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha',
+    var NAKSHATRAS_ML = ['അശ്വതി','ഭരണി','കാർത്തിക','രോഹിണി','മകയിരം','തിരുവാതിര','പുണർതം','പൂയം','ആയില്യം',
+      'മകം','പൂരം','ഉത്രം','അത്തം','ചിത്തിര','ചോതി','വിശാഖം','അനിഴം','തൃക്കേട്ട',
+      'മൂലം','പൂരാടം','ഉത്രാടം','തിരുവോണം','അവിട്ടം','ചതയം','പൂരുരുട്ടാതി','ഉത്രത്താതി','രേവതി'];
+    var NAKSHATRAS_EN = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha',
       'Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha',
       'Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
     var NAK_SYMBOLS = ["Horse's head","Yoni","Razor / flame","Cart / chariot","Deer's head","Teardrop / gem",
@@ -119,9 +147,14 @@
       "Palm of a hand","Bright jewel","Young shoot / coral","Triumphal arch","Lotus","Circular earring",
       "Bundle of roots","Elephant tusk (front)","Elephant tusk (back)","Ear","Drum","Empty circle",
       "Front legs of a cot","Back legs of a cot / twins","Fish"];
-    var LORD_CYCLE = ['Ketu','Venus','Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury'];
-    var NAKSHATRA_LORDS = [];
-    for (var i = 0; i < 27; i++) NAKSHATRA_LORDS.push(LORD_CYCLE[i % 9]);
+    var LORD_CYCLE_EN = ['Ketu','Venus','Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury'];
+    var LORD_CYCLE_ML = ['കെതു','ശുക്രൻ','സൂര്യൻ','ചന്ദ്രൻ','ചൊവ്വ','രാഹു','വ്യാഴം','ശനി','ബുധൻ'];
+    var NAKSHATRA_LORDS_EN = [];
+    var NAKSHATRA_LORDS_ML = [];
+    for (var i = 0; i < 27; i++) {
+      NAKSHATRA_LORDS_EN.push(LORD_CYCLE_EN[i % 9]);
+      NAKSHATRA_LORDS_ML.push(LORD_CYCLE_ML[i % 9]);
+    }
 
     var RASHI_SPAN = 30;
     var NAK_SPAN = 360 / 27;
@@ -131,6 +164,27 @@
       var x = lon % 360;
       if (x < 0) x += 360;
       return x;
+    }
+
+    // derived purely from position-within-the-9-nakshatra-block, not a
+    // separate hardcoded lookup -- see rn-note / the page text for why
+    function attaType(nakIdx) {
+      var pos = nakIdx % 9;
+      if (pos === 2) return { type: 'thala', ratio: [1, 3], label: 'തലയറ്റ 1:3' };
+      if (pos === 4) return { type: 'naduv', ratio: [2, 2], label: 'നടുവറ്റ 2:2' };
+      if (pos === 6) return { type: 'kaal', ratio: [3, 1], label: 'കാലറ്റ 3:1' };
+      return null;
+    }
+
+    var GANDANTHAM_JUNCTIONS_ML = ['ആയില്യം-മകം', 'തൃക്കേട്ട-മൂലം', 'രേവതി-അശ്വതി'];
+    var GANDANTHAM_JUNCTIONS_EN = ['Ashlesha-Magha', 'Jyeshtha-Mula', 'Revati-Ashwini'];
+
+    function gandanthamRole(nakIdx, pada) {
+      var pos = nakIdx % 9;
+      var block = Math.floor(nakIdx / 9);
+      if (pos === 8 && pada === 4) return { role: 'tyaga', junctionIdx: block };
+      if (pos === 0 && pada === 1) return { role: 'bhaya', junctionIdx: (block + 2) % 3 };
+      return null;
     }
 
     function classify(lonDeg) {
@@ -145,12 +199,8 @@
       return {
         lon: lon,
         rashiIdx: rashiIdx,
-        rashi: RASHIS[rashiIdx],
-        rashiLord: RASHI_LORDS[rashiIdx],
         rashiDeg: rashiDeg,
         nakIdx: nakIdx,
-        nakshatra: NAKSHATRAS[nakIdx],
-        nakshatraLord: NAKSHATRA_LORDS[nakIdx],
         pada: padaNum
       };
     }
@@ -164,7 +214,7 @@
 
     // ---------------- SVG wheel ----------------
     var svg = document.getElementById('rnSvg');
-    var CX = 190, CY = 190, R_OUTER = 170, R_RASHI_IN = 130, R_TICK = 122, R_LABEL = 150, R_HANDLE = 170;
+    var CX = 190, CY = 190, R_OUTER = 170, R_RASHI_IN = 130, R_LABEL = 150, R_HANDLE = 170;
 
     function polar(cx, cy, r, angleDeg) {
       var rad = (angleDeg - 90) * Math.PI / 180; // 0 deg at top, clockwise
@@ -199,17 +249,18 @@
       svg.appendChild(wedge);
       rashiWedges.push(wedge);
       var mid = polar(CX, CY, R_LABEL, a1 + 15);
-      var label = svgEl('text', { x: mid.x, y: mid.y, fill: '#e2e8f0', 'font-size': '18', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
-      label.textContent = RASHI_SYMBOLS[ri];
+      var label = svgEl('text', { x: mid.x, y: mid.y, fill: '#e2e8f0', 'font-size': '20', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
+      label.textContent = RASHI_EMOJI[ri];
       svg.appendChild(label);
     }
 
-    // nakshatra tick marks
+    // nakshatra tick marks (red for Gandantham boundary, muted otherwise)
     for (var ni = 0; ni < 27; ni++) {
       var ta = ni * NAK_SPAN;
+      var isGandanthamStart = (ni % 9) === 0;
       var t1 = polar(CX, CY, R_RASHI_IN - 4, ta);
       var t2 = polar(CX, CY, R_RASHI_IN + 4, ta);
-      svg.appendChild(svgEl('line', { x1: t1.x, y1: t1.y, x2: t2.x, y2: t2.y, stroke: '#64748b', 'stroke-width': '1' }));
+      svg.appendChild(svgEl('line', { x1: t1.x, y1: t1.y, x2: t2.x, y2: t2.y, stroke: isGandanthamStart ? '#f87171' : '#64748b', 'stroke-width': isGandanthamStart ? '2' : '1' }));
     }
 
     // active nakshatra highlight arc (updated on drag)
@@ -228,11 +279,14 @@
     var rashiMetaEl = document.getElementById('rnRashiMeta');
     var rashiSymbolEl = document.getElementById('rnRashiSymbol');
     var rashiNameEl = document.getElementById('rnRashiName');
+    var rashiNameEnEl = document.getElementById('rnRashiNameEn');
     var nakMetaEl = document.getElementById('rnNakMeta');
     var nakSymbolEl = document.getElementById('rnNakSymbol');
     var nakNameEl = document.getElementById('rnNakName');
+    var nakNameEnEl = document.getElementById('rnNakNameEn');
     var padaNumEl = document.getElementById('rnPadaNum');
     var padaMetaEl = document.getElementById('rnPadaMeta');
+    var gandanthamFlagEl = document.getElementById('rnGandanthamFlag');
     var lonTextEl = document.getElementById('rnLonText');
     var tableBody = document.getElementById('rnTableBody');
 
@@ -253,18 +307,31 @@
         w.setAttribute('stroke', i === c.rashiIdx ? '#38bdf8' : '#2a3655');
       });
 
-      lonTextEl.textContent = fmtDegMin(c.rashiDeg) + ' ' + c.rashi + '  (' + fmtDegMin(c.lon) + ' absolute)';
+      lonTextEl.textContent = fmtDegMin(c.rashiDeg) + ' ' + RASHIS_ML[c.rashiIdx] + '  (' + fmtDegMin(c.lon) + ' absolute)';
 
-      rashiSymbolEl.textContent = RASHI_SYMBOLS[c.rashiIdx];
-      rashiNameEl.textContent = c.rashi;
-      rashiMetaEl.innerHTML = 'Lord: <b>' + c.rashiLord + '</b><br>' + fmtDegMin(c.rashiDeg) + ' into this rashi';
+      rashiSymbolEl.textContent = RASHI_EMOJI[c.rashiIdx];
+      rashiNameEl.textContent = RASHIS_ML[c.rashiIdx];
+      rashiNameEnEl.textContent = RASHIS_EN[c.rashiIdx] + ' -- ' + RASHI_ANIMAL[c.rashiIdx];
+      rashiMetaEl.innerHTML = 'Lord: <b>' + RASHI_LORDS_ML[c.rashiIdx] + '</b> (' + RASHI_LORDS_EN[c.rashiIdx] + ')<br>' + fmtDegMin(c.rashiDeg) + ' into this rashi';
 
+      var atta = attaType(c.nakIdx);
       nakSymbolEl.textContent = '#' + (c.nakIdx + 1);
-      nakNameEl.textContent = c.nakshatra;
-      nakMetaEl.innerHTML = 'Lord: <b>' + c.nakshatraLord + '</b><br>Symbol: ' + NAK_SYMBOLS[c.nakIdx];
+      nakNameEl.textContent = NAKSHATRAS_ML[c.nakIdx];
+      nakNameEnEl.textContent = NAKSHATRAS_EN[c.nakIdx];
+      nakMetaEl.innerHTML = 'Lord: <b>' + NAKSHATRA_LORDS_ML[c.nakIdx] + '</b> (' + NAKSHATRA_LORDS_EN[c.nakIdx] + ')<br>Symbol: ' + NAK_SYMBOLS[c.nakIdx] +
+        (atta ? '<br>Split: <b>' + atta.label + '</b>' : '');
 
       padaNumEl.textContent = c.pada;
-      padaMetaEl.innerHTML = 'of 4, within ' + c.nakshatra;
+      padaMetaEl.innerHTML = 'of 4, within ' + NAKSHATRAS_ML[c.nakIdx];
+
+      var gRole = gandanthamRole(c.nakIdx, c.pada);
+      if (gRole) {
+        var jLabel = GANDANTHAM_JUNCTIONS_ML[gRole.junctionIdx] + ' (' + GANDANTHAM_JUNCTIONS_EN[gRole.junctionIdx] + ')';
+        var roleLabel = gRole.role === 'tyaga' ? 'ത്യാഗ ദോഷം (Tyaga)' : 'ഭയ ദോഷം (Bhaya)';
+        gandanthamFlagEl.innerHTML = '<span class="rn-gandantham-flag">ഗണ്ഡാന്തം: ' + roleLabel + '<br>' + jLabel + '</span>';
+      } else {
+        gandanthamFlagEl.innerHTML = '';
+      }
 
       Array.prototype.forEach.call(tableBody.children, function(tr, i) {
         tr.classList.toggle('rn-row-active', i === c.nakIdx);
@@ -300,22 +367,62 @@
 
     // ---------------- rashi lord summary ----------------
     var rashiMiniEl = document.getElementById('rnRashiMini');
-    rashiMiniEl.innerHTML = RASHIS.map(function(r, i) {
-      return '<div class="rn-rashi-chip">' + RASHI_SYMBOLS[i] + ' <b>' + r + '</b> &mdash; ' + RASHI_LORDS[i] + '</div>';
+    rashiMiniEl.innerHTML = RASHIS_ML.map(function(r, i) {
+      return '<div class="rn-rashi-chip">' + RASHI_EMOJI[i] + ' <b>' + r + '</b> <span class="rn-chip-en">(' + RASHIS_EN[i] + ')</span> &mdash; ' + RASHI_LORDS_ML[i] + ' <span class="rn-chip-en">(' + RASHI_LORDS_EN[i] + ')</span></div>';
     }).join('');
 
     // ---------------- full 27-row pada table ----------------
-    tableBody.innerHTML = NAKSHATRAS.map(function(name, ni) {
+    tableBody.innerHTML = NAKSHATRAS_ML.map(function(name, ni) {
       var padaCells = '';
       for (var p = 0; p < 4; p++) {
         var midLon = ni * NAK_SPAN + p * PADA_SPAN + PADA_SPAN / 2;
         var rIdx = Math.floor(norm(midLon) / RASHI_SPAN) % 12;
-        padaCells += '<td><span class="rn-pada-chip">' + RASHI_SYMBOLS[rIdx] + ' ' + RASHIS[rIdx] + '</span></td>';
+        var isGandantham = !!gandanthamRole(ni, p + 1);
+        padaCells += '<td><span class="rn-pada-chip' + (isGandantham ? ' rn-gandantham' : '') + '">' + RASHI_EMOJI[rIdx] + ' ' + RASHIS_ML[rIdx] + '</span></td>';
       }
-      return '<tr><td>' + (ni + 1) + '</td><td>' + name + '</td><td>' + NAK_SYMBOLS[ni] + '</td><td>' + NAKSHATRA_LORDS[ni] + '</td>' + padaCells + '</tr>';
+      var atta = attaType(ni);
+      var splitCell = atta ? '<span class="rn-split-tag">' + atta.label + '</span>' : '<span class="rn-split-none">&mdash;</span>';
+      return '<tr><td>' + (ni + 1) + '</td><td>' + name + ' <span class="rn-chip-en">(' + NAKSHATRAS_EN[ni] + ')</span></td><td>' + NAK_SYMBOLS[ni] + '</td>' +
+        '<td>' + NAKSHATRA_LORDS_ML[ni] + ' <span class="rn-chip-en">(' + NAKSHATRA_LORDS_EN[ni] + ')</span></td>' +
+        '<td>' + splitCell + '</td>' + padaCells + '</tr>';
     }).join('');
 
-    document.getElementById('rnNote').textContent = 'Rashi and nakshatra order, the fixed 9-lord nakshatra cycle, and rashi rulerships follow the standard Parashari framework shared across Jyotisha schools, including Kerala. Nakshatra symbol descriptions follow the most commonly cited tradition -- if your reference texts describe a different symbol or deity for any nakshatra, trust your text over this page.';
+    // ---------------- Atta / Gandantham summary ----------------
+    var summaryEl = document.getElementById('rnAttaGandanthamSummary');
+    var attaRows = [
+      { key: 'thala', label: 'തലയറ്റ (Thala-atta) 1:3' },
+      { key: 'naduv', label: 'നടുവറ്റ (Naduv-atta) 2:2' },
+      { key: 'kaal', label: 'കാലറ്റ (Kaal-atta) 3:1' }
+    ];
+    var attaHtml = '<table class="rn-table"><thead><tr><th>Split</th><th>Nakshatras</th><th>Shared lord</th></tr></thead><tbody>' +
+      attaRows.map(function(row) {
+        var naks = [];
+        var lord = null;
+        for (var i = 0; i < 27; i++) {
+          var a = attaType(i);
+          if (a && a.type === row.key) {
+            naks.push(NAKSHATRAS_ML[i] + ' (' + NAKSHATRAS_EN[i] + ')');
+            lord = NAKSHATRA_LORDS_ML[i] + ' (' + NAKSHATRA_LORDS_EN[i] + ')';
+          }
+        }
+        return '<tr><td>' + row.label + '</td><td>' + naks.join(', ') + '</td><td>' + lord + '</td></tr>';
+      }).join('') + '</tbody></table>';
+
+    var gandanthamHtml = '<table class="rn-table" style="margin-top:12px;"><thead><tr><th>Junction</th><th>ത്യാഗ ദോഷം (end of water sign)</th><th>ഭയ ദോഷം (start of fire sign)</th></tr></thead><tbody>' +
+      GANDANTHAM_JUNCTIONS_ML.map(function(name, ji) {
+        var tyagaNak = null, bhayaNak = null;
+        for (var i = 0; i < 27; i++) {
+          var t = gandanthamRole(i, 4);
+          if (t && t.role === 'tyaga' && t.junctionIdx === ji) tyagaNak = NAKSHATRAS_ML[i] + ' (' + NAKSHATRAS_EN[i] + ')';
+          var b = gandanthamRole(i, 1);
+          if (b && b.role === 'bhaya' && b.junctionIdx === ji) bhayaNak = NAKSHATRAS_ML[i] + ' (' + NAKSHATRAS_EN[i] + ')';
+        }
+        return '<tr><td>' + name + ' (' + GANDANTHAM_JUNCTIONS_EN[ji] + ')</td><td>' + tyagaNak + ', pada 4</td><td>' + bhayaNak + ', pada 1</td></tr>';
+      }).join('') + '</tbody></table>';
+
+    summaryEl.innerHTML = attaHtml + gandanthamHtml;
+
+    document.getElementById('rnNote').textContent = 'Rashi and nakshatra order, the fixed 9-lord nakshatra cycle, and rashi rulerships follow the standard Parashari framework shared across Jyotisha schools, including Kerala. Atta and Gandantham classifications are computed directly from each nakshatra’s position in that 9-cycle, not a separate lookup -- cross-checked against Dr. P.S. Nair’s Kerala-tradition reference table. Malayalam rashi names follow the standard Malayalam-calendar terms; nakshatra names and lords follow the table provided directly. If a specific reference text describes any detail differently, that text wins -- flag it and this page gets corrected.';
 
     render();
   })();

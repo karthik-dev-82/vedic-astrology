@@ -26,5 +26,5 @@ Foundations
      - What it covers
      - Key terms
    * - :doc:`rashi_nakshatra_interactive`
-     - Interactive rashi/nakshatra/pada wheel -- drag to any longitude and see its rashi, nakshatra, pada, and both lords live
-     - rashi, nakshatra, pada, rashi lord, nakshatra lord
+     - Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live
+     - rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham

@@ -13,7 +13,7 @@ structure invisible.
 
 | Page | What it covers | Key terms |
 | --- | --- | --- |
-| 🎮 **[Rashis, Nakshatras & Padas (Interactive)](docs/source/rashi_nakshatra_interactive.rst)** | Interactive rashi/nakshatra/pada wheel -- drag to any longitude and see its rashi, nakshatra, pada, and both lords live | rashi, nakshatra, pada, rashi lord, nakshatra lord |
+| 🎮 **[Rashis, Nakshatras & Padas (Interactive)](docs/source/rashi_nakshatra_interactive.rst)** | Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live | rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham |
 
 ## Repository Layout
 
