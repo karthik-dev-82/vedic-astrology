@@ -1,0 +1,445 @@
+<div class="vd-root" id="vdWidget">
+  <style>
+    #vdWidget {
+      --vd-bg: #0f172a;
+      --vd-panel: #16213e;
+      --vd-border: #2a3655;
+      --vd-text: #e2e8f0;
+      --vd-muted: #94a3b8;
+      --vd-accent: #38bdf8;
+      --vd-good: #4ade80;
+      --vd-warn: #fbbf24;
+      --vd-bad: #f87171;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--vd-bg);
+      color: var(--vd-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #vdWidget * { box-sizing: border-box; }
+    #vdWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #fff; }
+    #vdWidget .vd-sub { color: var(--vd-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .vd-body { display: flex; gap: 20px; min-width: 1080px; }
+    .vd-left-col { flex: 0 0 300px; display: flex; flex-direction: column; gap: 12px; }
+    .vd-right-col { flex: 1 1 auto; min-width: 0; }
+
+    .vd-wheel-wrap { background: var(--vd-panel); border: 1px solid var(--vd-border); border-radius: 10px; padding: 16px; text-align: center; }
+    .vd-wheel-hint { text-align: center; font-size: 0.7rem; color: var(--vd-muted); margin-top: 8px; }
+
+    .vd-card { background: var(--vd-panel); border: 1px solid var(--vd-border); border-radius: 10px; padding: 14px 16px; }
+    .vd-card-title { font-size: 0.72rem; font-weight: 700; color: var(--vd-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+
+    .vd-field { margin-bottom: 10px; }
+    .vd-field label { display: block; font-size: 0.72rem; color: var(--vd-muted); margin-bottom: 4px; }
+    .vd-field input[type="date"] {
+      width: 100%; background: var(--vd-bg); border: 1px solid var(--vd-border); border-radius: 6px;
+      color: var(--vd-text); padding: 6px 8px; font-size: 0.85rem; font-family: inherit;
+    }
+
+    .vd-nak-name { font-size: 1.05rem; font-weight: 700; color: #fff; margin: 4px 0 0; }
+    .vd-nak-name-en { font-size: 0.72rem; color: var(--vd-muted); margin-bottom: 4px; }
+    .vd-meta { font-size: 0.76rem; color: var(--vd-muted); line-height: 1.6; }
+    .vd-meta b { color: var(--vd-text); }
+    .vd-frac-bar { height: 8px; border-radius: 4px; background: var(--vd-bg); border: 1px solid var(--vd-border); overflow: hidden; margin: 6px 0; }
+    .vd-frac-fill { height: 100%; background: var(--vd-accent); }
+
+    .vd-cycle-bar { display: flex; height: 34px; border-radius: 6px; overflow: hidden; border: 1px solid var(--vd-border); }
+    .vd-cycle-seg { display: flex; align-items: center; justify-content: center; font-size: 0.66rem; font-weight: 700; color: #041322; white-space: nowrap; overflow: hidden; }
+    .vd-cycle-legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; font-size: 0.7rem; color: var(--vd-muted); }
+    .vd-cycle-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .vd-legend-dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+    .vd-md-row { border: 1px solid var(--vd-border); border-radius: 8px; margin-bottom: 6px; overflow: hidden; }
+    .vd-md-head { display: flex; align-items: center; gap: 10px; padding: 9px 12px; cursor: pointer; background: var(--vd-panel); }
+    .vd-md-head:hover { background: #1c2a4d; }
+    .vd-md-row.vd-now > .vd-md-head { background: rgba(251,191,36,0.12); border-left: 3px solid var(--vd-warn); }
+    .vd-caret { width: 14px; flex: none; color: var(--vd-muted); font-size: 0.7rem; transition: transform 0.15s; }
+    .vd-md-row.vd-open > .vd-md-head .vd-caret { transform: rotate(90deg); }
+    .vd-lord-chip { flex: 0 0 150px; font-weight: 700; color: #fff; font-size: 0.82rem; }
+    .vd-lord-chip .vd-chip-en { color: var(--vd-muted); font-weight: 400; font-size: 0.72rem; }
+    .vd-dates { flex: 0 0 230px; font-family: ui-monospace, monospace; font-size: 0.74rem; color: var(--vd-muted); }
+    .vd-dur { flex: 0 0 80px; font-size: 0.74rem; color: var(--vd-text); }
+    .vd-bar-track { flex: 1 1 auto; height: 8px; background: var(--vd-bg); border-radius: 4px; overflow: hidden; margin-right: 6px; }
+    .vd-bar-fill { height: 100%; }
+    .vd-now-tag { flex: none; font-size: 0.62rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(251,191,36,0.25); color: var(--vd-warn); }
+
+    .vd-md-body { display: none; padding: 6px 12px 10px 30px; background: rgba(0,0,0,0.15); }
+    .vd-md-row.vd-open > .vd-md-body { display: block; }
+
+    .vd-ad-row { border: 1px solid rgba(42,54,85,0.6); border-radius: 6px; margin-bottom: 4px; overflow: hidden; }
+    .vd-ad-head { display: flex; align-items: center; gap: 10px; padding: 6px 10px; cursor: pointer; font-size: 0.75rem; }
+    .vd-ad-head:hover { background: rgba(56,189,248,0.06); }
+    .vd-ad-row.vd-now > .vd-ad-head { background: rgba(251,191,36,0.1); border-left: 3px solid var(--vd-warn); }
+    .vd-ad-lord { flex: 0 0 190px; color: var(--vd-text); font-weight: 600; }
+    .vd-ad-lord .vd-chip-en { color: var(--vd-muted); font-weight: 400; }
+    .vd-ad-dates { flex: 0 0 210px; font-family: ui-monospace, monospace; color: var(--vd-muted); font-size: 0.7rem; }
+    .vd-ad-dur { flex: 0 0 70px; color: var(--vd-muted); font-size: 0.7rem; }
+    .vd-ad-body { display: none; padding: 4px 8px 8px 26px; }
+    .vd-ad-row.vd-open > .vd-ad-body { display: block; }
+
+    table.vd-pd-table { width: 100%; border-collapse: collapse; font-size: 0.68rem; }
+    table.vd-pd-table td { padding: 3px 8px; border-bottom: 1px solid rgba(42,54,85,0.4); font-family: ui-monospace, monospace; color: var(--vd-muted); }
+    table.vd-pd-table tr.vd-now td { color: var(--vd-warn); font-weight: 700; }
+    table.vd-pd-table td.vd-pd-lord { font-family: inherit; color: var(--vd-text); font-weight: 600; }
+
+    .vd-note { font-size: 0.76rem; color: var(--vd-muted); line-height: 1.5; margin-top: 12px; }
+    .vd-scroll { max-height: 620px; overflow-y: auto; padding-right: 4px; }
+  </style>
+
+  <h3>വിംശോത്തരി ദശ (Vimshottari Dasha): Play With It</h3>
+  <div class="vd-sub">Set a birth date and drag the Moon to any നക്ഷത്രം (nakshatra) position. The 120-year മഹാദശ (Mahadasha) timeline below rebuilds live from just those two inputs -- click any period to expand its അന്തർദശ (Antardasha) and പ്രത്യന്തർദശ (Pratyantardasha) sub-periods. The period containing today's date is marked ഇപ്പോൾ (now).</div>
+
+  <div class="vd-body">
+    <div class="vd-left-col">
+      <div class="vd-wheel-wrap">
+        <svg id="vdSvg" width="260" height="260" viewBox="0 0 260 260"></svg>
+        <div class="vd-wheel-hint">Drag to set the Moon's നക്ഷത്രം position</div>
+      </div>
+      <div class="vd-card">
+        <div class="vd-card-title">Moon at birth</div>
+        <div class="vd-nak-name" id="vdNakName"></div>
+        <div class="vd-nak-name-en" id="vdNakNameEn"></div>
+        <div class="vd-meta" id="vdNakMeta"></div>
+        <div class="vd-frac-bar"><div class="vd-frac-fill" id="vdFracFill"></div></div>
+        <div class="vd-meta" id="vdFracMeta"></div>
+      </div>
+      <div class="vd-card">
+        <div class="vd-card-title">Birth date</div>
+        <div class="vd-field">
+          <label for="vdBirthDate">Date of birth</label>
+          <input type="date" id="vdBirthDate" value="1990-01-01" min="1900-01-01" max="2100-01-01">
+        </div>
+        <div class="vd-meta" id="vdBalanceMeta"></div>
+      </div>
+    </div>
+    <div class="vd-right-col">
+      <div class="vd-card" style="margin-bottom:12px;">
+        <div class="vd-card-title">The fixed 120-year cycle (9 lords, proportional lengths)</div>
+        <div class="vd-cycle-bar" id="vdCycleBar"></div>
+        <div class="vd-cycle-legend" id="vdCycleLegend"></div>
+      </div>
+      <div class="vd-card">
+        <div class="vd-card-title">മഹാദശ (Mahadasha) timeline from birth</div>
+        <div class="vd-scroll" id="vdMahadashaList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vd-note" id="vdNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('vdWidget');
+
+    var LORD_CYCLE_ML = ['കെതു','ശുക്രൻ','സൂര്യൻ','ചന്ദ്രൻ','ചൊവ്വ','രാഹു','വ്യാഴം','ശനി','ബുധൻ'];
+    var LORD_CYCLE_EN = ['Ketu','Venus','Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury'];
+    var LORD_YEARS =    [7,      20,     6,     10,     7,      18,    16,       19,     17];
+    var LORD_COLORS =   ['#a78bfa','#f472b6','#fbbf24','#e2e8f0','#f87171','#64748b','#4ade80','#38bdf8','#facc15'];
+    var TOTAL_CYCLE_YEARS = 120;
+    var DAYS_PER_YEAR = 365.25;
+
+    var NAKSHATRAS_ML = ['അശ്വതി','ഭരണി','കാർത്തിക','രോഹിണി','മകയിരം','തിരുവാതിര','പുണർതം','പൂയം','ആയില്യം',
+      'മകം','പൂരം','ഉത്രം','അത്തം','ചിത്തിര','ചോതി','വിശാഖം','അനിഴം','തൃക്കേട്ട',
+      'മൂലം','പൂരാടം','ഉത്രാടം','തിരുവോണം','അവിട്ടം','ചതയം','പൂരുരുട്ടാതി','ഉത്രത്താതി','രേവതി'];
+    var NAKSHATRAS_EN = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha',
+      'Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha',
+      'Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+
+    var NAK_SPAN = 360 / 27;
+    var MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function norm(lon) { var x = lon % 360; if (x < 0) x += 360; return x; }
+
+    function nakshatraOf(lonDeg) {
+      var lon = norm(lonDeg);
+      var nakIdx = Math.floor(lon / NAK_SPAN) % 27;
+      var nakStart = nakIdx * NAK_SPAN;
+      return { nakIdx: nakIdx, elapsedFraction: (lon - nakStart) / NAK_SPAN };
+    }
+
+    function lordAtBirth(moonLonDeg) {
+      var n = nakshatraOf(moonLonDeg);
+      var lordIdx = n.nakIdx % 9;
+      return { lordIdx: lordIdx, elapsedFraction: n.elapsedFraction, balanceFraction: 1 - n.elapsedFraction, nakIdx: n.nakIdx };
+    }
+
+    function addDays(date, days) { return new Date(date.getTime() + days * 86400000); }
+    function daysBetween(a, b) { return (b.getTime() - a.getTime()) / 86400000; }
+
+    // Same generic proportional divider used for Mahadasha -> Antardasha
+    // and Antardasha -> Pratyantardasha: 9 children chained end-to-end,
+    // starting from the parent's own lord, each sized YEARS[lord]/120.
+    function subdivide(startLordIdx, start, durationDays) {
+      var children = [];
+      var cursor = start;
+      for (var i = 0; i < 9; i++) {
+        var idx = (startLordIdx + i) % 9;
+        var share = LORD_YEARS[idx] / TOTAL_CYCLE_YEARS;
+        var childDays = durationDays * share;
+        var end = addDays(cursor, childDays);
+        children.push({ lordIdx: idx, start: cursor, end: end, days: childDays });
+        cursor = end;
+      }
+      children[children.length - 1].end = addDays(start, durationDays);
+      return children;
+    }
+
+    function buildMahadashas(birth, balance, spanYears) {
+      var mahadashas = [];
+      var firstFullDays = LORD_YEARS[balance.lordIdx] * DAYS_PER_YEAR;
+      var elapsedDays = balance.elapsedFraction * firstFullDays;
+      var conceptualStart = addDays(birth, -elapsedDays);
+      var firstEnd = addDays(conceptualStart, firstFullDays);
+
+      mahadashas.push({ lordIdx: balance.lordIdx, conceptualStart: conceptualStart, start: birth, end: firstEnd, fullDurationDays: firstFullDays, isBalance: true });
+
+      var cursor = firstEnd;
+      var idx = balance.lordIdx;
+      var spanDays = spanYears * DAYS_PER_YEAR;
+      while (daysBetween(birth, cursor) < spanDays) {
+        idx = (idx + 1) % 9;
+        var fullDays = LORD_YEARS[idx] * DAYS_PER_YEAR;
+        var end = addDays(cursor, fullDays);
+        mahadashas.push({ lordIdx: idx, conceptualStart: cursor, start: cursor, end: end, fullDurationDays: fullDays, isBalance: false });
+        cursor = end;
+      }
+      return mahadashas;
+    }
+
+    function subPeriodsFor(period) {
+      var all = subdivide(period.lordIdx, period.conceptualStart, period.fullDurationDays);
+      return all.filter(function(p) { return p.end.getTime() > period.start.getTime(); })
+        .map(function(p) {
+          var start = p.start.getTime() < period.start.getTime() ? period.start : p.start;
+          return { lordIdx: p.lordIdx, start: start, end: p.end, fullDurationDays: p.days, conceptualStart: p.start };
+        });
+    }
+
+    function fmtDate(d) { return d.getUTCDate() + ' ' + MONTHS_EN[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); }
+    function fmtDuration(days) {
+      var totalMonths = Math.round(days / 30.4368);
+      var yrs = Math.floor(totalMonths / 12);
+      var mo = totalMonths % 12;
+      return yrs + 'y ' + mo + 'm';
+    }
+    function fmtDurationShort(days) {
+      if (days < 60) return Math.round(days) + 'd';
+      return fmtDuration(days);
+    }
+
+    // ---------------- wheel (nakshatra ring only -- dasha depends only on
+    // the Moon's position within its nakshatra, not on rashi) ----------------
+    var svg = document.getElementById('vdSvg');
+    var CX = 130, CY = 130, R_OUTER = 112, R_IN = 78, R_HANDLE = 112;
+
+    function polar(cx, cy, r, angleDeg) {
+      var rad = (angleDeg - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+    function arcPath(r1, r2, a1, a2) {
+      var p1 = polar(CX, CY, r2, a1), p2 = polar(CX, CY, r2, a2);
+      var p3 = polar(CX, CY, r1, a2), p4 = polar(CX, CY, r1, a1);
+      var large = (a2 - a1) > 180 ? 1 : 0;
+      return 'M ' + p1.x + ' ' + p1.y + ' A ' + r2 + ' ' + r2 + ' 0 ' + large + ' 1 ' + p2.x + ' ' + p2.y +
+        ' L ' + p3.x + ' ' + p3.y + ' A ' + r1 + ' ' + r1 + ' 0 ' + large + ' 0 ' + p4.x + ' ' + p4.y + ' Z';
+    }
+    function svgEl(tag, attrs) {
+      var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (var k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    }
+
+    var nakWedges = [];
+    for (var ni = 0; ni < 27; ni++) {
+      var a1 = ni * NAK_SPAN, a2 = a1 + NAK_SPAN;
+      var lordIdx = ni % 9;
+      var wedge = svgEl('path', { d: arcPath(R_IN, R_OUTER, a1, a2), fill: LORD_COLORS[lordIdx], 'fill-opacity': '0.22', stroke: '#2a3655', 'stroke-width': '1' });
+      svg.appendChild(wedge);
+      nakWedges.push(wedge);
+    }
+    var activeArc = svgEl('path', { fill: 'rgba(251,191,36,0.35)', stroke: 'none' });
+    svg.appendChild(activeArc);
+    svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: R_IN - 6, fill: '#0f172a', stroke: '#2a3655' }));
+    var handleLine = svgEl('line', { x1: CX, y1: CY, x2: CX, y2: CY - R_HANDLE, stroke: '#38bdf8', 'stroke-width': '2' });
+    var handleDot = svgEl('circle', { cx: CX, cy: CY - R_HANDLE, r: 8, fill: '#38bdf8', stroke: '#041322', 'stroke-width': '2', style: 'cursor:grab;' });
+    svg.appendChild(handleLine);
+    svg.appendChild(handleDot);
+
+    var moonLon = 15;
+    var birthDate = new Date(Date.UTC(1990, 0, 1));
+
+    function setFromAngle(clientX, clientY) {
+      var rect = svg.getBoundingClientRect();
+      var scale = 260 / rect.width;
+      var x = (clientX - rect.left) * scale - CX;
+      var y = (clientY - rect.top) * scale - CY;
+      var angle = Math.atan2(y, x) * 180 / Math.PI + 90;
+      if (angle < 0) angle += 360;
+      moonLon = angle;
+      renderAll();
+    }
+    var dragging = false;
+    svg.addEventListener('mousedown', function(e) { dragging = true; e.preventDefault(); setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', function(e) { if (dragging) setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', function() { dragging = false; });
+    svg.addEventListener('touchstart', function(e) { dragging = true; var t = e.touches[0]; setFromAngle(t.clientX, t.clientY); }, { passive: true });
+    svg.addEventListener('touchmove', function(e) { if (!dragging) return; var t = e.touches[0]; setFromAngle(t.clientX, t.clientY); }, { passive: true });
+    window.addEventListener('touchend', function() { dragging = false; });
+
+    // ---------------- static 120-year cycle bar ----------------
+    var cycleBarEl = document.getElementById('vdCycleBar');
+    var cycleLegendEl = document.getElementById('vdCycleLegend');
+    cycleBarEl.innerHTML = LORD_CYCLE_EN.map(function(name, i) {
+      var pct = (LORD_YEARS[i] / TOTAL_CYCLE_YEARS) * 100;
+      return '<div class="vd-cycle-seg" style="width:' + pct + '%; background:' + LORD_COLORS[i] + ';">' + LORD_YEARS[i] + 'y</div>';
+    }).join('');
+    cycleLegendEl.innerHTML = LORD_CYCLE_EN.map(function(name, i) {
+      return '<span><i class="vd-legend-dot" style="background:' + LORD_COLORS[i] + '"></i>' + LORD_CYCLE_ML[i] + ' <span style="opacity:0.75">(' + name + ', ' + LORD_YEARS[i] + 'y)</span></span>';
+    }).join('');
+
+    // ---------------- birth date input ----------------
+    var birthInput = document.getElementById('vdBirthDate');
+    birthInput.addEventListener('change', function() {
+      var parts = birthInput.value.split('-');
+      if (parts.length === 3) {
+        birthDate = new Date(Date.UTC(+parts[0], +parts[1] - 1, +parts[2]));
+        renderAll();
+      }
+    });
+
+    // ---------------- rendering ----------------
+    var nakNameEl = document.getElementById('vdNakName');
+    var nakNameEnEl = document.getElementById('vdNakNameEn');
+    var nakMetaEl = document.getElementById('vdNakMeta');
+    var fracFillEl = document.getElementById('vdFracFill');
+    var fracMetaEl = document.getElementById('vdFracMeta');
+    var balanceMetaEl = document.getElementById('vdBalanceMeta');
+    var mdListEl = document.getElementById('vdMahadashaList');
+
+    function buildMdRow(md, now) {
+      var row = document.createElement('div');
+      row.className = 'vd-md-row';
+      var isNow = now.getTime() >= md.start.getTime() && now.getTime() < md.end.getTime();
+      if (isNow) row.classList.add('vd-now');
+
+      var head = document.createElement('div');
+      head.className = 'vd-md-head';
+      var pct = (md.fullDurationDays / (TOTAL_CYCLE_YEARS * DAYS_PER_YEAR)) * 100;
+      head.innerHTML =
+        '<span class="vd-caret">&#9656;</span>' +
+        '<span class="vd-lord-chip">' + LORD_CYCLE_ML[md.lordIdx] + ' <span class="vd-chip-en">(' + LORD_CYCLE_EN[md.lordIdx] + ')</span></span>' +
+        '<span class="vd-dates">' + fmtDate(md.start) + ' &rarr; ' + fmtDate(md.end) + '</span>' +
+        '<span class="vd-dur">' + fmtDuration(daysBetween(md.start, md.end)) + (md.isBalance ? ' (balance)' : '') + '</span>' +
+        '<span class="vd-bar-track"><span class="vd-bar-fill" style="width:' + Math.min(100, pct * 3) + '%; background:' + LORD_COLORS[md.lordIdx] + ';"></span></span>' +
+        (isNow ? '<span class="vd-now-tag">ഇപ്പോൾ now</span>' : '');
+      row.appendChild(head);
+
+      var body = document.createElement('div');
+      body.className = 'vd-md-body';
+      row.appendChild(body);
+
+      var populated = false;
+      function populate() {
+        if (populated) return;
+        populated = true;
+        subPeriodsFor(md).forEach(function(ad) { body.appendChild(buildAdRow(ad, now)); });
+      }
+      head.addEventListener('click', function() {
+        populate();
+        row.classList.toggle('vd-open');
+      });
+      if (isNow) { populate(); row.classList.add('vd-open'); }
+      return row;
+    }
+
+    function buildAdRow(ad, now) {
+      var row = document.createElement('div');
+      row.className = 'vd-ad-row';
+      var isNow = now.getTime() >= ad.start.getTime() && now.getTime() < ad.end.getTime();
+      if (isNow) row.classList.add('vd-now');
+
+      var head = document.createElement('div');
+      head.className = 'vd-ad-head';
+      head.innerHTML =
+        '<span class="vd-caret">&#9656;</span>' +
+        '<span class="vd-ad-lord">' + LORD_CYCLE_ML[ad.lordIdx] + ' <span class="vd-chip-en">(' + LORD_CYCLE_EN[ad.lordIdx] + ')</span></span>' +
+        '<span class="vd-ad-dates">' + fmtDate(ad.start) + ' &rarr; ' + fmtDate(ad.end) + '</span>' +
+        '<span class="vd-ad-dur">' + fmtDurationShort(daysBetween(ad.start, ad.end)) + '</span>' +
+        (isNow ? '<span class="vd-now-tag">ഇപ്പോൾ now</span>' : '');
+      row.appendChild(head);
+
+      var body = document.createElement('div');
+      body.className = 'vd-ad-body';
+      row.appendChild(body);
+
+      var populated = false;
+      function populate() {
+        if (populated) return;
+        populated = true;
+        var table = document.createElement('table');
+        table.className = 'vd-pd-table';
+        var tbody = document.createElement('tbody');
+        subPeriodsFor(ad).forEach(function(pd) {
+          var pdIsNow = now.getTime() >= pd.start.getTime() && now.getTime() < pd.end.getTime();
+          var tr = document.createElement('tr');
+          if (pdIsNow) tr.className = 'vd-now';
+          tr.innerHTML = '<td class="vd-pd-lord">' + LORD_CYCLE_ML[pd.lordIdx] + ' <span class="vd-chip-en">(' + LORD_CYCLE_EN[pd.lordIdx] + ')</span></td>' +
+            '<td>' + fmtDate(pd.start) + ' &rarr; ' + fmtDate(pd.end) + '</td>' +
+            '<td>' + fmtDurationShort(daysBetween(pd.start, pd.end)) + '</td>' +
+            (pdIsNow ? '<td>ഇപ്പോൾ now</td>' : '<td></td>');
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        body.appendChild(table);
+      }
+      head.addEventListener('click', function(e) {
+        e.stopPropagation();
+        populate();
+        row.classList.toggle('vd-open');
+      });
+      if (isNow) { populate(); row.classList.add('vd-open'); }
+      return row;
+    }
+
+    function renderAll() {
+      var n = nakshatraOf(moonLon);
+      var balance = lordAtBirth(moonLon);
+
+      var pt = polar(CX, CY, R_HANDLE, moonLon);
+      handleLine.setAttribute('x2', pt.x);
+      handleLine.setAttribute('y2', pt.y);
+      handleDot.setAttribute('cx', pt.x);
+      handleDot.setAttribute('cy', pt.y);
+
+      var nakStart = n.nakIdx * NAK_SPAN;
+      activeArc.setAttribute('d', arcPath(R_IN, R_OUTER, nakStart, nakStart + NAK_SPAN));
+      nakWedges.forEach(function(w, i) { w.setAttribute('stroke', i === n.nakIdx ? '#38bdf8' : '#2a3655'); w.setAttribute('stroke-width', i === n.nakIdx ? '2' : '1'); });
+
+      nakNameEl.textContent = NAKSHATRAS_ML[n.nakIdx];
+      nakNameEnEl.textContent = NAKSHATRAS_EN[n.nakIdx];
+      nakMetaEl.innerHTML = 'Dasha lord: <b>' + LORD_CYCLE_ML[balance.lordIdx] + '</b> (' + LORD_CYCLE_EN[balance.lordIdx] + ')';
+
+      var elapsedPct = (n.elapsedFraction * 100).toFixed(1);
+      fracFillEl.style.width = elapsedPct + '%';
+      fracMetaEl.innerHTML = elapsedPct + '% elapsed through this nakshatra, ' + (100 - elapsedPct).toFixed(1) + '% remaining';
+
+      var fullYears = LORD_YEARS[balance.lordIdx];
+      var balanceYears = balance.balanceFraction * fullYears;
+      balanceMetaEl.innerHTML = 'Balance of <b>' + LORD_CYCLE_ML[balance.lordIdx] + '</b> Mahadasha at birth: <b>' + balanceYears.toFixed(2) + ' of ' + fullYears + ' years</b> remain (= balance fraction &times; full period).';
+
+      var now = new Date();
+      var mahadashas = buildMahadashas(birthDate, balance, TOTAL_CYCLE_YEARS);
+      mdListEl.innerHTML = '';
+      mahadashas.forEach(function(md) { mdListEl.appendChild(buildMdRow(md, now)); });
+    }
+
+    document.getElementById('vdNote').textContent = 'Mechanical layer only: the 9-lord cycle, the fixed 120-year allocation (Ketu 7, Venus 20, Sun 6, Moon 10, Mars 7, Rahu 18, Jupiter 16, Saturn 19, Mercury 17), the balance-of-dasha-at-birth rule (elapsed fraction through the Moon’s birth nakshatra), and the self-first proportional nesting rule for Antardasha/Pratyantardasha follow the standard Vimshottari system shared across Jyotisha schools, including Kerala. This widget computes real dates from the two inputs -- it does not tell you what any period “means” for anyone’s life. The nakshatra/lord cycle here is the exact same 9-position cycle used on the rashi/nakshatra page. If a specific reference text describes a detail differently, that text wins.';
+
+    renderAll();
+  })();
+  </script>
+</div>
