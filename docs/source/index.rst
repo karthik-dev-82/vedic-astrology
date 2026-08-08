@@ -30,5 +30,5 @@ Foundations
      - Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live
      - rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham
    * - :doc:`vimshottari_dasha_interactive`
-     - Interactive 120-year Vimshottari Dasha timeline -- set a birth date and Moon position, get a live Mahadasha/Antardasha/Pratyantardasha timeline with real dates
-     - Vimshottari, Mahadasha, Antardasha, Pratyantardasha, balance of dasha
+     - Interactive 120-year Vimshottari Dasha timeline -- enter a birth date/time/timezone, get the Moon's real computed sidereal position and a live Mahadasha/Antardasha/Pratyantardasha timeline
+     - Vimshottari, Mahadasha, Antardasha, Pratyantardasha, balance of dasha, ayanamsa
