@@ -4,6 +4,7 @@
 .. raw:: html
 
    <style>
+     @import url('https://fonts.googleapis.com/css2?family=Manjari:wght@100;700&family=Noto+Sans+Malayalam:wght@500&display=swap');
      div.document {
        background: #eef1ee;
        color: #1c231d;
@@ -95,6 +96,16 @@
      div.document .highlight .vc, div.document .highlight .vg,
      div.document .highlight .vi, div.document .highlight .vm { color: #4a4470; }
      div.document .highlight .o, div.document .highlight .go { color: #6a6a5e; }
+     div.document h1,
+     div.document h2,
+     div.document p {
+       font-family: 'Manjari', sans-serif;
+       font-weight: 100;
+     }
+     div.document strong {
+       font-family: 'Manjari', sans-serif;
+       font-weight: 700;
+     }
    </style>
 
 **ദശ** (dasha) periods assign each planet a stretch of a person's
