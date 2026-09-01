@@ -1,5 +1,5 @@
-Vedic Astrology
-===================
+നവാംശം (Navamsha D9) & വർഗ്ഗോത്തമം (Vargottama): Play With It
+================================================================================
 
 .. raw:: html
 
@@ -125,38 +125,84 @@ Vedic Astrology
      div.document table.docutils tr:last-child td { border-bottom: none; }
    </style>
 
-Personal study notes on Jyotisha (Vedic astrology), with a lean
-toward the Kerala school where source material allows it. Built the
-same way as the reference material this grew out of: real, checkable
-mechanics first, wrapped in a small interactive widget wherever a
-static explanation would leave the actual structure invisible.
+Every rashi divides into 9 equal **നവാംശം** (Navamsha) segments of 3
+degrees 20 minutes each -- the exact same span as a nakshatra pada on
+the :doc:`rashi_nakshatra_interactive` page, just grouped by rashi (9
+per sign) instead of by nakshatra (4 per nakshatra). This page is that
+one extra layer of arithmetic: which sign a given Navamsha segment
+lands in, and whether a planet's D1 and D9 signs coincide
+(വർഗ്ഗോത്തമം, Vargottama).
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-   :caption: Foundations
+Play With It
+------------------
 
-   rashi_nakshatra_interactive
-   vimshottari_dasha_interactive
-   navamsa_interactive
+Drag the pointer around the wheel, or click anywhere on the ring, to
+see any longitude's D1 രാശി and its computed D9 നവാംശം sign update
+live, along with which of the 9 divisions it falls in and whether it's
+വർഗ്ഗോത്തമം. The reference grid below shows the complete 12x9 = 108-cell
+mapping -- drag around the wheel and watch the active row highlight
+move through it.
 
-Foundations
------------------
+.. raw:: html
+   :file: _static/navamsa_widget.html
+
+Why the Starting Sign Shifts by Modality
+--------------------------------------------------------
+
+The 9 divisions of a rashi don't always start counting from that
+rashi itself. Which sign they start from depends on the rashi's
+**modality** (Guna):
 
 .. list-table::
    :class: longtable
    :header-rows: 1
    :widths: 25 35 40
 
-   * - Page
-     - What it covers
-     - Key terms
-   * - :doc:`rashi_nakshatra_interactive`
-     - Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live
-     - rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham
-   * - :doc:`vimshottari_dasha_interactive`
-     - Interactive 120-year Vimshottari Dasha timeline -- enter a birth date/time/timezone, get the Moon's real computed sidereal position and a live Mahadasha/Antardasha/Pratyantardasha timeline
-     - Vimshottari, Mahadasha, Antardasha, Pratyantardasha, balance of dasha, ayanamsa
-   * - :doc:`navamsa_interactive`
-     - Interactive Navamsha (D9) wheel -- drag to any longitude and see its D1 rashi and computed D9 sign live, whether it's Vargottama, and the full 12x9 mapping grid
-     - Navamsha, D9, Vargottama, modality, movable, fixed, dual
+   * - Modality
+     - Rashis
+     - Where the 9 divisions start
+   * - ചരം (Movable / Chara)
+     - Mesha, Karka, Tula, Makara
+     - From the rashi itself
+   * - സ്ഥിരം (Fixed / Sthira)
+     - Vrishabha, Simha, Vrishchika, Kumbha
+     - From the 9th sign counting from it
+   * - ദ്വിസ്വഭാവം (Dual / Dwisvabhava)
+     - Mithuna, Kanya, Dhanu, Meena
+     - From the 5th sign counting from it
+
+A structural fact worth noticing, and one the widget's wheel makes
+visible directly: whichever of the 12 rashis you start from, the sign
+those 9 divisions count from is **always itself movable** -- not a
+coincidence, but a direct consequence of the three modalities being
+spaced 3 rashis apart around a 12-rashi wheel where movable signs sit
+at positions 0, 3, 6, 9.
+
+വർഗ്ഗോത്തമം (Vargottama): When D1 and D9 Agree
+--------------------------------------------------------
+
+Out of a rashi's 9 divisions, **exactly one** always maps back to that
+same rashi in D9 -- verified directly against the full 108-cell table,
+not asserted on faith. A planet placed in that one division is
+Vargottama: its D1 (Rashi) placement and D9 (Navamsha) placement
+agree, which classical sources treat as a marker of unusual stability
+across the chart. This page stops at *whether* Vargottama occurs --
+what it's traditionally said to mean for a chart is interpretation,
+not covered here.
+
+Sources & Scope
+--------------------
+
+The Navamsha division rule (movable signs count from themselves,
+fixed signs from the 9th sign from them, dual signs from the 5th) and
+the resulting Vargottama definition follow the standard Parashari
+framework used across essentially every Jyotisha school, including
+Kerala. The rule was independently verified against a published
+worked example (Aries 11 degrees 35 minutes falling in the 4th of 9
+divisions, correctly mapping to Karka/Cancer) before publishing, and
+the two structural invariants highlighted above (the starting sign is
+always movable; exactly one Vargottama division per rashi) were
+verified by direct computation across the full 108-cell table rather
+than assumed. If a specific reference text -- especially anything
+Kerala-school-specific -- describes a detail differently, that text
+wins; flag it and this page gets corrected.
