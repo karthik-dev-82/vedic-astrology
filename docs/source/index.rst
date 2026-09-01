@@ -144,6 +144,7 @@ static explanation would leave the actual structure invisible.
    jaimini_interactive
    sphuta_interactive
    ashtakavarga_interactive
+   gulika_interactive
 
 Foundations
 -----------------
@@ -180,3 +181,6 @@ Foundations
    * - :doc:`ashtakavarga_interactive`
      - Interactive Ashtakavarga Shodhana & Kakshya calculator -- enter raw bindus and occupancy to see Trikona and Ekadhipatya Shodhana live, verified against a real published worked example
      - Ashtakavarga, Trikona Shodhana, Ekadhipatya Shodhana, Rashi Pinda, Kakshya
+   * - :doc:`gulika_interactive`
+     - Interactive Gulika/Mandi calculator -- enter a real birth date/time/place, get real sunrise/sunset and a computed Ascendant at Saturn's weekday segment, verified by independent astronomical derivation
+     - Gulika, Mandi, Upagraha, Ascendant, sunrise, sunset, weekday lord

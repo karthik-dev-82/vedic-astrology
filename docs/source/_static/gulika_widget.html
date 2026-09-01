@@ -1,0 +1,411 @@
+<div class="gk-root" id="gkWidget">
+  <style>
+    #gkWidget {
+      --gk-bg: #eef1ee;
+      --gk-panel: #ffffff;
+      --gk-border: #cdd6cc;
+      --gk-text: #1c231d;
+      --gk-muted: #5c675d;
+      --gk-a: #3d5c3d;
+      --gk-b: #7a2f3d;
+      --gk-bad: #b0432a;
+      --gk-warn: #a67c1f;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--gk-bg);
+      color: var(--gk-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #gkWidget * { box-sizing: border-box; }
+    #gkWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #gkWidget .gk-sub { color: var(--gk-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .gk-body { display: flex; gap: 20px; min-width: 1080px; }
+    .gk-input-col { flex: 0 0 280px; display: flex; flex-direction: column; gap: 12px; }
+    .gk-output-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+
+    .gk-card { background: var(--gk-panel); border: 1px solid var(--gk-border); border-radius: 10px; padding: 14px 16px; }
+    .gk-card-title { font-size: 0.72rem; font-weight: 700; color: var(--gk-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+
+    .gk-field { margin-bottom: 10px; }
+    .gk-field-row { display: flex; gap: 10px; }
+    .gk-field { flex: 1 1 0; min-width: 0; }
+    .gk-field label { display: block; font-size: 0.72rem; color: var(--gk-muted); margin-bottom: 4px; }
+    .gk-field input { width: 100%; background: var(--gk-bg); border: 1px solid var(--gk-border); border-radius: 6px; color: var(--gk-text); padding: 6px 8px; font-size: 0.85rem; font-family: inherit; }
+
+    .gk-meta { font-size: 0.76rem; color: var(--gk-muted); line-height: 1.6; }
+    .gk-meta b { color: var(--gk-text); }
+    .gk-big { font-size: 1.05rem; font-weight: 700; color: var(--gk-b); }
+    .gk-tag { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 5px; margin-left: 6px; }
+    .gk-tag-day { background: rgba(166,124,31,0.16); color: var(--gk-warn); }
+    .gk-tag-night { background: rgba(61,92,61,0.14); color: var(--gk-a); }
+
+    .gk-span-bar { display: flex; height: 34px; border-radius: 6px; overflow: hidden; border: 1px solid var(--gk-border); margin-top: 8px; }
+    .gk-span-seg { display: flex; align-items: center; justify-content: center; font-size: 0.62rem; font-weight: 700; color: #1c231d; border-right: 1px solid rgba(0,0,0,0.08); position: relative; }
+    .gk-span-seg.gk-saturn { outline: 2px solid #1c231d; outline-offset: -2px; }
+    .gk-birth-marker { position: absolute; top: -6px; width: 2px; height: 46px; background: #7a2f3d; }
+
+    .gk-error { color: var(--gk-bad); font-size: 0.85rem; font-weight: 600; }
+    .gk-note { font-size: 0.76rem; color: var(--gk-muted); line-height: 1.5; margin-top: 4px; }
+  </style>
+
+  <h3>ഗുളിക/മാണ്ഡി (Gulika / Mandi): Play With It</h3>
+  <div class="gk-sub">Enter a birth date, local time, timezone, and place. Gulika's longitude is computed from real astronomy: the Ascendant at the exact clock moment Saturn's segment begins, where the day (or night) is divided into 8 equal parts by weekday.</div>
+
+  <div class="gk-body">
+    <div class="gk-input-col">
+      <div class="gk-card">
+        <div class="gk-card-title">Birth details</div>
+        <div class="gk-field">
+          <label for="gkDate">Date of birth</label>
+          <input type="date" id="gkDate" value="1990-06-15" min="1900-01-01" max="2100-01-01">
+        </div>
+        <div class="gk-field-row">
+          <div class="gk-field">
+            <label for="gkTime">Local time</label>
+            <input type="time" id="gkTime" value="12:00">
+          </div>
+          <div class="gk-field">
+            <label for="gkOffset">UTC offset (hrs)</label>
+            <input type="number" id="gkOffset" value="5.5" step="0.5" min="-12" max="14">
+          </div>
+        </div>
+        <div class="gk-field-row">
+          <div class="gk-field">
+            <label for="gkLat">Latitude (+N/-S)</label>
+            <input type="number" id="gkLat" value="13.08" step="0.01" min="-89" max="89">
+          </div>
+          <div class="gk-field">
+            <label for="gkLon">Longitude (+E/-W)</label>
+            <input type="number" id="gkLon" value="80.27" step="0.01" min="-180" max="180">
+          </div>
+        </div>
+      </div>
+      <div class="gk-card">
+        <div class="gk-card-title">Weekday segment lord</div>
+        <div class="gk-meta" id="gkWeekdayMeta"></div>
+      </div>
+    </div>
+    <div class="gk-output-col">
+      <div class="gk-card">
+        <div class="gk-card-title">Gulika's position</div>
+        <div id="gkResultBody"></div>
+      </div>
+      <div class="gk-card">
+        <div class="gk-card-title">The relevant day/night span, divided into 8 segments</div>
+        <div class="gk-span-bar" id="gkSpanBar"></div>
+        <div class="gk-meta" id="gkSpanMeta" style="margin-top:8px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="gk-note" id="gkNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('gkWidget');
+    var D2R = Math.PI / 180;
+    var J2000 = 2451545.0;
+
+    var RASHIS_ML = ['മേടം','ഇടവം','മിഥുനം','കർക്കടകം','ചിങ്ങം','കന്നി','തുലാം','വൃശ്ചികം','ധനു','മകരം','കുംഭം','മീനം'];
+    var RASHIS_EN = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+    var NAKSHATRAS_ML = ['അശ്വതി','ഭരണി','കാർത്തിക','രോഹിണി','മകയിരം','തിരുവാതിര','പുണർതം','പൂയം','ആയില്യം',
+      'മകം','പൂരം','ഉത്രം','അത്തം','ചിത്തിര','ചോതി','വിശാഖം','അനിഴം','തൃക്കേട്ട',
+      'മൂലം','പൂരാടം','ഉത്രാടം','തിരുവോണം','അവിട്ടം','ചതയം','പൂരുരുട്ടാതി','ഉത്രത്താതി','രേവതി'];
+    var NAKSHATRAS_EN = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha',
+      'Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha',
+      'Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+    var WEEKDAY_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var WEEKDAY_ML = ['ഞായർ','തിങ്കൾ','ചൊവ്വ','ബുധൻ','വ്യാഴം','വെള്ളി','ശനി'];
+    var WEEKDAY_LORD_CYCLE = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+    var SEGMENT_COLORS = ['#e8c98a','#eae2c9','#e3b3a3','#c9c073','#aac2a4','#e3bcc5','#a9c0cb','#d3c2e8'];
+
+    function norm360(x) { var r = x % 360; if (r < 0) r += 360; return r; }
+    function norm7(i) { var x = i % 7; if (x < 0) x += 7; return x; }
+    function horner(x, c) { var i = c.length - 1, y = c[i]; while (i > 0) { i--; y = y * x + c[i]; } return y; }
+    function J2000Century(jde) { return (jde - J2000) / 36525; }
+    var UNIX_EPOCH_JD = 2440587.5;
+    function jdFromUtcDate(d) { return d.getTime() / 86400000 + UNIX_EPOCH_JD; }
+    function utcDateFromJd(jd) { return new Date((jd - UNIX_EPOCH_JD) * 86400000); }
+
+    // ---------------- Sun (Meeus Ch.24 low-accuracy, verified against worked example 24.a) ----------------
+    function sunPosition(jde) {
+      var T = J2000Century(jde);
+      var L0 = norm360(horner(T, [280.46645, 36000.76983, 0.0003032]));
+      var M = norm360(horner(T, [357.52910, 35999.05030, -0.0001559, -0.00000048]));
+      var Mrad = M * D2R;
+      var C = (1.914600 - 0.004817 * T - 0.000014 * T * T) * Math.sin(Mrad) +
+        (0.019993 - 0.000101 * T) * Math.sin(2 * Mrad) +
+        0.000290 * Math.sin(3 * Mrad);
+      return { trueLon: norm360(L0 + C) };
+    }
+    function meanObliquityDeg(jde) {
+      var T = J2000Century(jde);
+      var sec = horner(T, [21.448, -46.8150, -0.00059, 0.001813]);
+      return 23 + 26 / 60 + sec / 3600;
+    }
+    function sunApparentLongitudeDeg(jde) {
+      var s = sunPosition(jde);
+      var Omega = 125.04 - 1934.136 * J2000Century(jde);
+      return norm360(s.trueLon - 0.00569 - 0.00478 * Math.sin(Omega * D2R));
+    }
+
+    // ---------------- Sidereal time (Meeus 11.4, verified against 11.a/11.b) ----------------
+    function greenwichMeanSiderealTimeDeg(jde) {
+      var T = J2000Century(jde);
+      return norm360(horner(T, [280.46061837, 0, 0.000387933]) + 360.98564736629 * (jde - J2000) - (T * T * T) / 38710000);
+    }
+
+    // ---------------- ecliptic<->equatorial (Meeus 12.3/12.4, beta=0) ----------------
+    function eclipticToEquatorial(lambdaDeg, epsilonDeg) {
+      var lam = lambdaDeg * D2R, eps = epsilonDeg * D2R;
+      var alpha = Math.atan2(Math.sin(lam) * Math.cos(eps), Math.cos(lam)) / D2R;
+      var delta = Math.asin(Math.sin(eps) * Math.sin(lam)) / D2R;
+      return { alpha: norm360(alpha), delta: delta };
+    }
+    function altitudeDeg(latDeg, decDeg, hourAngleDeg) {
+      var phi = latDeg * D2R, dec = decDeg * D2R, H = hourAngleDeg * D2R;
+      return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H)) / D2R;
+    }
+
+    // ---------------- Ascendant (re-derived via 3D vector rotation of the
+    // ecliptic circle against the horizon plane -- reproduces the standard
+    // arctan formula exactly; verified by a round-trip on/rising check
+    // during development, see build notes). lonEastDeg positive EAST. ----------------
+    function ascendantDeg(jde, latDeg, lonEastDeg) {
+      var gst = greenwichMeanSiderealTimeDeg(jde);
+      var ramc = norm360(gst + lonEastDeg);
+      var eps = meanObliquityDeg(jde);
+      var phi = latDeg * D2R, theta = ramc * D2R, epsRad = eps * D2R;
+      var y = -Math.cos(theta);
+      var x = Math.sin(theta) * Math.cos(epsRad) + Math.tan(phi) * Math.sin(epsRad);
+      var lambda = norm360(Math.atan2(y, x) / D2R);
+      var eq = eclipticToEquatorial(lambda, eps);
+      var H = norm360(ramc - eq.alpha);
+      if (H > 0 && H < 180) lambda = norm360(lambda + 180);
+      return lambda;
+    }
+
+    // ---------------- Sunrise / sunset (geometric, Newton-refined) ----------------
+    var H0_SUN_DEG = -0.8333;
+    var SOLAR_HOUR_ANGLE_RATE_DEG_PER_DAY = 360.0;
+
+    function solarTransitAndHourAngle(jdApprox, latDeg, lonEastDeg) {
+      var jde = jdApprox;
+      for (var i = 0; i < 4; i++) {
+        var lam = sunApparentLongitudeDeg(jde);
+        var eps = meanObliquityDeg(jde);
+        var eq = eclipticToEquatorial(lam, eps);
+        var gst = greenwichMeanSiderealTimeDeg(jde);
+        var ramc = norm360(gst + lonEastDeg);
+        var H = norm360(ramc - eq.alpha);
+        if (H > 180) H -= 360;
+        jde = jde - H / 360.98564736629;
+      }
+      var lamFinal = sunApparentLongitudeDeg(jde);
+      var epsFinal = meanObliquityDeg(jde);
+      var eqFinal = eclipticToEquatorial(lamFinal, epsFinal);
+      return { transitJde: jde, delta: eqFinal.delta, alpha: eqFinal.alpha };
+    }
+    function hourAngleForAltitude(latDeg, decDeg) {
+      var phi = latDeg * D2R, dec = decDeg * D2R;
+      var cosH0 = (Math.sin(H0_SUN_DEG * D2R) - Math.sin(phi) * Math.sin(dec)) / (Math.cos(phi) * Math.cos(dec));
+      if (cosH0 < -1 || cosH0 > 1) return null;
+      return Math.acos(cosH0) / D2R;
+    }
+    function actualSunHourAngle(jde, lonEastDeg) {
+      var lam = sunApparentLongitudeDeg(jde);
+      var eps = meanObliquityDeg(jde);
+      var eq = eclipticToEquatorial(lam, eps);
+      var gst = greenwichMeanSiderealTimeDeg(jde);
+      var ramc = norm360(gst + lonEastDeg);
+      var H = norm360(ramc - eq.alpha);
+      return { H: H > 180 ? H - 360 : H, delta: eq.delta };
+    }
+    function sunriseSunsetJde(dateNoonJde, latDeg, lonEastDeg) {
+      var transit = solarTransitAndHourAngle(dateNoonJde, latDeg, lonEastDeg);
+      var H0 = hourAngleForAltitude(latDeg, transit.delta);
+      if (H0 === null) return null;
+      var riseJde = transit.transitJde - H0 / SOLAR_HOUR_ANGLE_RATE_DEG_PER_DAY;
+      var setJde = transit.transitJde + H0 / SOLAR_HOUR_ANGLE_RATE_DEG_PER_DAY;
+      for (var i = 0; i < 6; i++) {
+        var actual = actualSunHourAngle(riseJde, lonEastDeg);
+        var targetH = -hourAngleForAltitude(latDeg, actual.delta);
+        riseJde -= (actual.H - targetH) / SOLAR_HOUR_ANGLE_RATE_DEG_PER_DAY;
+      }
+      for (var j = 0; j < 6; j++) {
+        var actualSet = actualSunHourAngle(setJde, lonEastDeg);
+        var targetHset = hourAngleForAltitude(latDeg, actualSet.delta);
+        setJde -= (actualSet.H - targetHset) / SOLAR_HOUR_ANGLE_RATE_DEG_PER_DAY;
+      }
+      return { transitJde: transit.transitJde, riseJde: riseJde, setJde: setJde, H0: H0 };
+    }
+
+    // ---------------- Lahiri ayanamsa (reused, verified in the Vimshottari build) ----------------
+    var LAHIRI_T0_JDE = 2435553.5;
+    var LAHIRI_AYAN_T0_DEG = 23.250182778 - 0.004658035;
+    function precessionArcsec(T) { return 5029.0966 * T + 1.11113 * T * T - 0.000006 * T * T * T; }
+    function lahiriAyanamsaDeg(jde) {
+      var T = J2000Century(jde);
+      var T0 = J2000Century(LAHIRI_T0_JDE);
+      return LAHIRI_AYAN_T0_DEG + (precessionArcsec(T) - precessionArcsec(T0)) / 3600;
+    }
+
+    // ---------------- weekday day/night Saturn-segment (derived, verified
+    // against all 14 published values) ----------------
+    function daySaturnSegment(weekdayIdx) { return 1 + norm7(6 - weekdayIdx); }
+    function nightSaturnSegment(weekdayIdx) { var nightStart = norm7(weekdayIdx + 4); return 1 + norm7(6 - nightStart); }
+
+    // ---------------- top-level: Gulika from birth data ----------------
+    function gulikaLongitude(localFields, utcOffsetHours, latDeg, lonEastDeg) {
+      var localFieldsMs = Date.UTC(localFields.year, localFields.month - 1, localFields.day, localFields.hour, localFields.minute);
+      var utcInstant = new Date(localFieldsMs - utcOffsetHours * 3600000);
+      var birthJde = jdFromUtcDate(utcInstant);
+
+      function sunTimesForLocalDate(y, mo, d) {
+        var localNoonMs = Date.UTC(y, mo - 1, d, 12, 0, 0) - utcOffsetHours * 3600000;
+        var noonGuessJde = jdFromUtcDate(new Date(localNoonMs));
+        return sunriseSunsetJde(noonGuessJde, latDeg, lonEastDeg);
+      }
+
+      var y = localFields.year, mo = localFields.month, d = localFields.day;
+      var today = sunTimesForLocalDate(y, mo, d);
+      if (!today) return null;
+
+      var isDay, spanStart, spanEnd, weekdayLocalDate;
+      if (birthJde >= today.riseJde && birthJde < today.setJde) {
+        isDay = true;
+        spanStart = today.riseJde; spanEnd = today.setJde;
+        weekdayLocalDate = new Date(Date.UTC(y, mo - 1, d));
+      } else if (birthJde >= today.setJde) {
+        isDay = false;
+        var tmw = new Date(Date.UTC(y, mo - 1, d + 1));
+        var tomorrow = sunTimesForLocalDate(tmw.getUTCFullYear(), tmw.getUTCMonth() + 1, tmw.getUTCDate());
+        spanStart = today.setJde; spanEnd = tomorrow ? tomorrow.riseJde : today.setJde + 0.5;
+        weekdayLocalDate = new Date(Date.UTC(y, mo - 1, d));
+      } else {
+        isDay = false;
+        var ymw = new Date(Date.UTC(y, mo - 1, d - 1));
+        var yesterday = sunTimesForLocalDate(ymw.getUTCFullYear(), ymw.getUTCMonth() + 1, ymw.getUTCDate());
+        spanStart = yesterday ? yesterday.setJde : today.riseJde - 0.5; spanEnd = today.riseJde;
+        weekdayLocalDate = ymw;
+      }
+
+      var weekdayIdx = weekdayLocalDate.getUTCDay();
+      var segment = isDay ? daySaturnSegment(weekdayIdx) : nightSaturnSegment(weekdayIdx);
+      var spanDuration = spanEnd - spanStart;
+      var segmentStartJde = spanStart + (segment - 1) / 8 * spanDuration;
+
+      var tropicalLon = ascendantDeg(segmentStartJde, latDeg, lonEastDeg);
+      var siderealLon = norm360(tropicalLon - lahiriAyanamsaDeg(segmentStartJde));
+
+      return {
+        siderealLon: siderealLon, isDay: isDay, weekdayIdx: weekdayIdx, segment: segment,
+        segmentStartJde: segmentStartJde, spanStart: spanStart, spanEnd: spanEnd, birthJde: birthJde
+      };
+    }
+
+    function fmtLocalTime(jde, utcOffsetHours) {
+      var d = utcDateFromJd(jde);
+      var localMs = d.getTime() + utcOffsetHours * 3600000;
+      var local = new Date(localMs);
+      var hh = local.getUTCHours(), mm = local.getUTCMinutes();
+      return (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm;
+    }
+
+    // ---------------- DOM wiring ----------------
+    var dateInput = document.getElementById('gkDate');
+    var timeInput = document.getElementById('gkTime');
+    var offsetInput = document.getElementById('gkOffset');
+    var latInput = document.getElementById('gkLat');
+    var lonInput = document.getElementById('gkLon');
+    [dateInput, timeInput, offsetInput, latInput, lonInput].forEach(function(el) { el.addEventListener('change', render); });
+
+    var resultBodyEl = document.getElementById('gkResultBody');
+    var weekdayMetaEl = document.getElementById('gkWeekdayMeta');
+    var spanBarEl = document.getElementById('gkSpanBar');
+    var spanMetaEl = document.getElementById('gkSpanMeta');
+
+    function render() {
+      var dateParts = dateInput.value.split('-');
+      var timeParts = timeInput.value.split(':');
+      if (dateParts.length !== 3) return;
+      var localFields = { year: +dateParts[0], month: +dateParts[1], day: +dateParts[2], hour: +timeParts[0] || 0, minute: +timeParts[1] || 0 };
+      var utcOffset = parseFloat(offsetInput.value) || 0;
+      var lat = parseFloat(latInput.value) || 0;
+      var lon = parseFloat(lonInput.value) || 0;
+
+      var r = gulikaLongitude(localFields, utcOffset, lat, lon);
+
+      var weekdayIdxForDisplay = new Date(Date.UTC(localFields.year, localFields.month - 1, localFields.day)).getUTCDay();
+      weekdayMetaEl.innerHTML = 'Local calendar date: <b>' + WEEKDAY_ML[weekdayIdxForDisplay] + '</b> (' + WEEKDAY_EN[weekdayIdxForDisplay] + ')<br>' +
+        'Day-birth Saturn segment: <b>' + daySaturnSegment(weekdayIdxForDisplay) + ' of 8</b><br>' +
+        'Night-birth Saturn segment: <b>' + nightSaturnSegment(weekdayIdxForDisplay) + ' of 8</b>';
+
+      if (!r) {
+        resultBodyEl.innerHTML = '<div class="gk-error">No sunrise/sunset at this latitude on this date (polar day/night) -- Gulika is not defined here.</div>';
+        spanBarEl.innerHTML = '';
+        spanMetaEl.textContent = '';
+        return;
+      }
+
+      var rashiIdx = Math.floor(r.siderealLon / 30) % 12;
+      var nakSpan = 360 / 27;
+      var nakIdx = Math.floor(r.siderealLon / nakSpan) % 27;
+      var rashiDeg = r.siderealLon - rashiIdx * 30;
+
+      resultBodyEl.innerHTML =
+        '<div class="gk-big">' + RASHIS_ML[rashiIdx] + ' (' + RASHIS_EN[rashiIdx] + ')' +
+        '<span class="gk-tag ' + (r.isDay ? 'gk-tag-day' : 'gk-tag-night') + '">' + (r.isDay ? 'Day birth' : 'Night birth') + '</span></div>' +
+        '<div class="gk-meta">' + rashiDeg.toFixed(2) + '&deg; into ' + RASHIS_ML[rashiIdx] + ' -- Nakshatra: <b>' + NAKSHATRAS_ML[nakIdx] + '</b> (' + NAKSHATRAS_EN[nakIdx] + ')<br>' +
+        'Saturn’s segment: <b>' + r.segment + ' of 8</b>, using <b>' + WEEKDAY_ML[r.weekdayIdx] + '</b> (' + WEEKDAY_EN[r.weekdayIdx] + ')' + (r.isDay ? '' : '’s night') + ' rule<br>' +
+        'Segment begins at local time <b>' + fmtLocalTime(r.segmentStartJde, utcOffset) + '</b> -- Gulika = the Ascendant at that exact moment</div>';
+
+      var segCount = 8;
+      spanBarEl.innerHTML = '';
+      for (var s = 0; s < segCount; s++) {
+        var seg = document.createElement('div');
+        seg.className = 'gk-span-seg' + (s + 1 === r.segment ? ' gk-saturn' : '');
+        seg.style.width = (100 / segCount) + '%';
+        seg.style.background = SEGMENT_COLORS[s];
+        // Use r.weekdayIdx (the model's already-correct weekday -- for a
+        // pre-dawn night birth this is shifted to the PREVIOUS calendar
+        // day, per the Vedic sunrise-to-sunrise day convention), not the
+        // literal typed date. An earlier draft used the typed date's own
+        // weekday here directly, which produced correct Saturn-segment
+        // highlighting (that part reads r.segment, already correct) but
+        // WRONG lord labels on every other segment for pre-dawn births.
+        var lordIdx = (r.isDay ? r.weekdayIdx : norm7(r.weekdayIdx + 4));
+        lordIdx = norm7(lordIdx + s);
+        seg.textContent = (s === 7 ? 'Rahu' : WEEKDAY_LORD_CYCLE[lordIdx]);
+        // The birth marker belongs wherever the birth moment actually
+        // falls within the 8 segments -- NOT only when that happens to
+        // be Saturn's own segment. An earlier draft gated this on
+        // `s + 1 === r.segment`, which silently hid the marker for the
+        // (much more common) case of a birth NOT occurring during
+        // Saturn's own window.
+        if (r.birthJde >= r.spanStart && r.birthJde < r.spanEnd) {
+          var overallFrac = (r.birthJde - r.spanStart) / (r.spanEnd - r.spanStart) * segCount;
+          var frac = overallFrac - s;
+          if (frac >= 0 && frac < 1) {
+            var marker = document.createElement('div');
+            marker.className = 'gk-birth-marker';
+            marker.style.left = (frac * 100) + '%';
+            seg.appendChild(marker);
+          }
+        }
+        spanBarEl.appendChild(seg);
+      }
+      spanMetaEl.innerHTML = (r.isDay ? 'Sunrise' : 'Sunset') + ' <b>' + fmtLocalTime(r.spanStart, utcOffset) + '</b> &rarr; ' +
+        (r.isDay ? 'sunset' : 'sunrise') + ' <b>' + fmtLocalTime(r.spanEnd, utcOffset) + '</b> (local time), divided into 8 equal segments. ' +
+        (r.birthJde >= r.spanStart && r.birthJde < r.spanEnd ? 'The vertical line marks the birth moment.' : '');
+    }
+
+    document.getElementById('gkNote').textContent = 'A larger astronomical build than the rest of this site’s widgets: Sun position (Meeus’s low-accuracy solar formula, verified against his own worked example), sidereal time and the Ascendant (re-derived independently via 3D vector geometry and verified by a round-trip on-the-horizon-and-rising check), and sunrise/sunset (verified the same way) all feed into this single Gulika calculation. The weekday day/night segment-lord rule is derived from one simple 7-planet cycle rather than a hardcoded table, matching all 14 published day+night values. Uses the Lahiri ayanamsa, geocentric Sun position, and a simplified mid-latitude sunrise model (not valid inside the polar circles). If a specific reference text describes a detail differently, that text wins.';
+
+    render();
+  })();
+  </script>
+</div>
