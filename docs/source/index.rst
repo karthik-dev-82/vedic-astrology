@@ -143,6 +143,7 @@ static explanation would leave the actual structure invisible.
    dignity_interactive
    jaimini_interactive
    sphuta_interactive
+   ashtakavarga_interactive
 
 Foundations
 -----------------
@@ -176,3 +177,6 @@ Foundations
    * - :doc:`sphuta_interactive`
      - Interactive Kerala Sphuta calculator -- set Lagna/Moon/Mandi and see all 5 Sphuta points and their built-in consistency check update live
      - Sphuta, Trisphuta, Prana Sphuta, Deha Sphuta, Mrityu Sphuta, Mandi, Prashna Marga
+   * - :doc:`ashtakavarga_interactive`
+     - Interactive Ashtakavarga Shodhana & Kakshya calculator -- enter raw bindus and occupancy to see Trikona and Ekadhipatya Shodhana live, verified against a real published worked example
+     - Ashtakavarga, Trikona Shodhana, Ekadhipatya Shodhana, Rashi Pinda, Kakshya
