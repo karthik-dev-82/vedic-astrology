@@ -1,5 +1,5 @@
-Vedic Astrology
-===================
+ചരകാരകങ്ങളും (Chara Karakas) ആരൂഢ ലഗ്നവും (Arudha/Upapada Lagna): Play With It
+================================================================================
 
 .. raw:: html
 
@@ -125,62 +125,71 @@ Vedic Astrology
      div.document table.docutils tr:last-child td { border-bottom: none; }
    </style>
 
-Personal study notes on Jyotisha (Vedic astrology), with a lean
-toward the Kerala school where source material allows it. Built the
-same way as the reference material this grew out of: real, checkable
-mechanics first, wrapped in a small interactive widget wherever a
-static explanation would leave the actual structure invisible.
+The **Jaimini** branch of Jyotisha uses two mechanisms that don't
+appear anywhere in the Parashari framework covered on the rest of
+this site: ranking planets by their raw degree to assign
+**ചരകാരകങ്ങൾ** (Chara Karakas, "movable significators"), and
+projecting a house's **ആരൂഢം** (Arudha, "mounted" or reflected
+position) from its lord. Both are pure counting -- no interpretation
+required to compute them, whatever they're said to mean.
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-   :caption: Foundations
+Play With It
+------------------
 
-   rashi_nakshatra_interactive
-   vimshottari_dasha_interactive
-   navamsa_interactive
-   tarabala_interactive
-   dignity_interactive
-   jaimini_interactive
-   sphuta_interactive
-   ashtakavarga_interactive
-   gulika_interactive
+Set each graha's degree-within-sign to rank the 8 Chara Karakas live.
+Separately, pick any house, its sign, and the sign its lord currently
+occupies, to compute that house's Arudha Pada -- Arudha Lagna and
+Upapada Lagna are just this identical calculation applied to house 1
+and house 12.
 
-Foundations
------------------
+.. raw:: html
+   :file: _static/jaimini_widget.html
 
-.. list-table::
-   :class: longtable
-   :header-rows: 1
-   :widths: 25 35 40
+Ranking by Degree, Not by Sign
+--------------------------------------------------------
 
-   * - Page
-     - What it covers
-     - Key terms
-   * - :doc:`rashi_nakshatra_interactive`
-     - Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live
-     - rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham
-   * - :doc:`vimshottari_dasha_interactive`
-     - Interactive 120-year Vimshottari Dasha timeline -- enter a birth date/time/timezone, get the Moon's real computed sidereal position and a live Mahadasha/Antardasha/Pratyantardasha timeline
-     - Vimshottari, Mahadasha, Antardasha, Pratyantardasha, balance of dasha, ayanamsa
-   * - :doc:`navamsa_interactive`
-     - Interactive Navamsha (D9) wheel -- drag to any longitude and see its D1 rashi and computed D9 sign live, whether it's Vargottama, and the full 12x9 mapping grid
-     - Navamsha, D9, Vargottama, modality, movable, fixed, dual
-   * - :doc:`tarabala_interactive`
-     - Interactive Tara Bala wheel -- drag to set the Janma Nakshatra and see all 27 nakshatras' relative Tara group and traditional auspicious/inauspicious reading update live
-     - Tara Bala, Janma Nakshatra, Navatara, Sampat, Vipat, Kshema
-   * - :doc:`dignity_interactive`
-     - Interactive planetary dignity & aspects wheel -- pick a graha, drag it anywhere in the zodiac, see its exaltation/own-sign/debilitation status and aspected signs live
-     - dignity, exaltation, debilitation, Moolatrikona, own sign, drishti, aspects
-   * - :doc:`jaimini_interactive`
-     - Interactive Chara Karaka ranking and generic Arudha Pada calculator -- covers Arudha Lagna and Upapada Lagna as the same mechanism applied to house 1 and house 12
-     - Chara Karaka, Atmakaraka, Darakaraka, Arudha Lagna, Upapada Lagna, Jaimini
-   * - :doc:`sphuta_interactive`
-     - Interactive Kerala Sphuta calculator -- set Lagna/Moon/Mandi and see all 5 Sphuta points and their built-in consistency check update live
-     - Sphuta, Trisphuta, Prana Sphuta, Deha Sphuta, Mrityu Sphuta, Mandi, Prashna Marga
-   * - :doc:`ashtakavarga_interactive`
-     - Interactive Ashtakavarga Shodhana & Kakshya calculator -- enter raw bindus and occupancy to see Trikona and Ekadhipatya Shodhana live, verified against a real published worked example
-     - Ashtakavarga, Trikona Shodhana, Ekadhipatya Shodhana, Rashi Pinda, Kakshya
-   * - :doc:`gulika_interactive`
-     - Interactive Gulika/Mandi calculator -- enter a real birth date/time/place, get real sunrise/sunset and a computed Ascendant at Saturn's weekday segment, verified by independent astronomical derivation
-     - Gulika, Mandi, Upagraha, Ascendant, sunrise, sunset, weekday lord
+Chara Karakas are ranked purely by **degree-within-sign** (0-30
+degrees), completely ignoring which sign each planet is in. The
+highest-degree planet is Atmakaraka; the lowest is Darakaraka. Rahu
+is included via **reverse longitude** (30 minus its raw degree)
+because Rahu is always retrograde -- its motion runs backward through
+the ranking compared to every other graha.
+
+A genuine, disclosed dispute: some classical schools use a
+**7-karaka** scheme that drops Rahu entirely (using only the 7
+physical planets), which changes the Atmakaraka/Darakaraka result in
+roughly a quarter of charts compared to the **8-karaka** scheme used
+here. This widget implements the more commonly used 8-karaka version
+rather than asserting either as the sole correct one.
+
+Arudha Pada: A Reflection, Never the Source
+--------------------------------------------------------
+
+The Arudha of a house is found by counting the sign-distance from the
+house to its lord, then projecting that same distance forward from
+the lord's own sign. One structural rule governs every case: **the
+result can never be the source house itself, or the house opposite
+it** -- if the raw calculation lands on either, 9 signs are added
+instead (the classical phrasing is "advance to the 10th house," which
+is 1-based inclusive counting for the same +9 offset).
+
+This page's widget was corrected during development because of
+exactly this rule: an earlier draft added a literal +10 rather than
++9, which is the natural but wrong reading of "advance by 10." A
+worked example (Leo Lagna with the Sun -- its own lord -- also in
+Leo) exposed the bug immediately: the raw result lands right back on
+Leo itself, and the correctly-corrected Arudha Lagna is Taurus, not
+the sign the +10 version produced.
+
+Sources & Scope
+--------------------
+
+The Chara Karaka ranking rule, Rahu's reverse-longitude treatment,
+and the generic Arudha Pada projection (including its 1st/7th-house
+exception) follow the standard Jaimini framework used across
+Jyotisha schools, including Kerala, and were independently verified
+-- including against a worked example that specifically exercises the
+exception rule -- before publishing. The 7-karaka vs. 8-karaka
+question is a genuine, disclosed dispute rather than a settled fact;
+see above. If a specific reference text describes a detail
+differently, that text wins; flag it and this page gets corrected.

@@ -1,5 +1,5 @@
-Vedic Astrology
-===================
+താരാബലം (Tara Bala): Play With It
+================================================================================
 
 .. raw:: html
 
@@ -125,62 +125,95 @@ Vedic Astrology
      div.document table.docutils tr:last-child td { border-bottom: none; }
    </style>
 
-Personal study notes on Jyotisha (Vedic astrology), with a lean
-toward the Kerala school where source material allows it. Built the
-same way as the reference material this grew out of: real, checkable
-mechanics first, wrapped in a small interactive widget wherever a
-static explanation would leave the actual structure invisible.
+**താരാബലം** (Tara Bala, "star strength") groups all 27 nakshatras
+into 9 named categories -- not by their fixed position in the zodiac,
+like the :doc:`rashi_nakshatra_interactive` page's Atta and Gandantham
+patterns, but **relative to a chosen reference point**: usually
+someone's ജന്മനക്ഷത്രം (Janma Nakshatra, birth star). Which category a
+given nakshatra falls into is pure counting -- the same `mod 9`
+structure already used elsewhere on this site, just applied to a
+distance instead of an absolute index.
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-   :caption: Foundations
+Play With It
+------------------
 
-   rashi_nakshatra_interactive
-   vimshottari_dasha_interactive
-   navamsa_interactive
-   tarabala_interactive
-   dignity_interactive
-   jaimini_interactive
-   sphuta_interactive
-   ashtakavarga_interactive
-   gulika_interactive
+Drag the pointer to set the Janma Nakshatra. Every other nakshatra's
+distance, Tara group, and traditional auspicious/inauspicious reading
+recompute live in the table below -- drag the wheel around and watch
+the whole table's classification rotate with it.
 
-Foundations
------------------
+.. raw:: html
+   :file: _static/tarabala_widget.html
+
+The Counting Rule
+--------------------
+
+Counting is 1-based and inclusive: the reference nakshatra itself is
+distance 1 (Janma Tara). From there, the 9 groups repeat three times
+across the 27 nakshatras:
 
 .. list-table::
    :class: longtable
    :header-rows: 1
-   :widths: 25 35 40
+   :widths: 15 20 20 45
 
-   * - Page
-     - What it covers
-     - Key terms
-   * - :doc:`rashi_nakshatra_interactive`
-     - Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live
-     - rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham
-   * - :doc:`vimshottari_dasha_interactive`
-     - Interactive 120-year Vimshottari Dasha timeline -- enter a birth date/time/timezone, get the Moon's real computed sidereal position and a live Mahadasha/Antardasha/Pratyantardasha timeline
-     - Vimshottari, Mahadasha, Antardasha, Pratyantardasha, balance of dasha, ayanamsa
-   * - :doc:`navamsa_interactive`
-     - Interactive Navamsha (D9) wheel -- drag to any longitude and see its D1 rashi and computed D9 sign live, whether it's Vargottama, and the full 12x9 mapping grid
-     - Navamsha, D9, Vargottama, modality, movable, fixed, dual
-   * - :doc:`tarabala_interactive`
-     - Interactive Tara Bala wheel -- drag to set the Janma Nakshatra and see all 27 nakshatras' relative Tara group and traditional auspicious/inauspicious reading update live
-     - Tara Bala, Janma Nakshatra, Navatara, Sampat, Vipat, Kshema
-   * - :doc:`dignity_interactive`
-     - Interactive planetary dignity & aspects wheel -- pick a graha, drag it anywhere in the zodiac, see its exaltation/own-sign/debilitation status and aspected signs live
-     - dignity, exaltation, debilitation, Moolatrikona, own sign, drishti, aspects
-   * - :doc:`jaimini_interactive`
-     - Interactive Chara Karaka ranking and generic Arudha Pada calculator -- covers Arudha Lagna and Upapada Lagna as the same mechanism applied to house 1 and house 12
-     - Chara Karaka, Atmakaraka, Darakaraka, Arudha Lagna, Upapada Lagna, Jaimini
-   * - :doc:`sphuta_interactive`
-     - Interactive Kerala Sphuta calculator -- set Lagna/Moon/Mandi and see all 5 Sphuta points and their built-in consistency check update live
-     - Sphuta, Trisphuta, Prana Sphuta, Deha Sphuta, Mrityu Sphuta, Mandi, Prashna Marga
-   * - :doc:`ashtakavarga_interactive`
-     - Interactive Ashtakavarga Shodhana & Kakshya calculator -- enter raw bindus and occupancy to see Trikona and Ekadhipatya Shodhana live, verified against a real published worked example
-     - Ashtakavarga, Trikona Shodhana, Ekadhipatya Shodhana, Rashi Pinda, Kakshya
-   * - :doc:`gulika_interactive`
-     - Interactive Gulika/Mandi calculator -- enter a real birth date/time/place, get real sunrise/sunset and a computed Ascendant at Saturn's weekday segment, verified by independent astronomical derivation
-     - Gulika, Mandi, Upagraha, Ascendant, sunrise, sunset, weekday lord
+   * - #
+     - Group
+     - Distance from Janma
+     - Traditional reading
+   * - 1
+     - ജന്മ (Janma)
+     - 1, 10, 19
+     - Neutral -- the reference point itself
+   * - 2
+     - സമ്പത്ത് (Sampat)
+     - 2, 11, 20
+     - Auspicious
+   * - 3
+     - വിപത്ത് (Vipat)
+     - 3, 12, 21
+     - Inauspicious
+   * - 4
+     - ക്ഷേമ (Kshema)
+     - 4, 13, 22
+     - Auspicious
+   * - 5
+     - പ്രത്യക് (Pratyak)
+     - 5, 14, 23
+     - Inauspicious
+   * - 6
+     - സാധന (Sadhana)
+     - 6, 15, 24
+     - Auspicious
+   * - 7
+     - നൈധന (Naidhana)
+     - 7, 16, 25
+     - Inauspicious
+   * - 8
+     - മിത്ര (Mitra)
+     - 8, 17, 26
+     - Auspicious
+   * - 9
+     - പരമ മിത്ര (Parama Mitra)
+     - 9, 18, 27
+     - Auspicious
+
+Because the pattern repeats every 9 nakshatras and 27 divides evenly
+by 9, every one of the 9 groups always contains **exactly 3** of the
+27 nakshatras, for any reference point at all -- verified directly by
+computing the full 27x27 table of every possible (reference, target)
+pair, not assumed from the rule alone.
+
+Sources & Scope
+--------------------
+
+The 9-group counting rule and the auspicious/inauspicious pattern
+follow the standard Navatara framework used across essentially every
+Jyotisha school, including Kerala, and were independently verified
+against multiple outside sources before publishing. The
+auspicious/inauspicious labels are the traditional classification this
+system is defined by, not a claim this page asserts as objective fact
+-- what a given Tara group is said to bring is interpretation; the
+counting mechanics that assign a nakshatra to a group are what's
+verified here. If a specific reference text describes a detail
+differently, that text wins; flag it and this page gets corrected.

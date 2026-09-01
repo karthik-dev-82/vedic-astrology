@@ -1,0 +1,333 @@
+<div class="nv-root" id="nvWidget">
+  <style>
+    #nvWidget {
+      --nv-bg: #eef1ee;
+      --nv-panel: #ffffff;
+      --nv-border: #cdd6cc;
+      --nv-text: #1c231d;
+      --nv-muted: #5c675d;
+      --nv-a: #3d5c3d;
+      --nv-b: #7a2f3d;
+      --nv-bad: #b0432a;
+      --nv-warn: #a67c1f;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--nv-bg);
+      color: var(--nv-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #nvWidget * { box-sizing: border-box; }
+    #nvWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #nvWidget .nv-sub { color: var(--nv-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .nv-body { display: flex; gap: 20px; min-width: 1080px; }
+    .nv-wheel-col { flex: 0 0 auto; }
+    .nv-detail-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+
+    .nv-wheel-wrap { background: var(--nv-panel); border: 1px solid var(--nv-border); border-radius: 10px; padding: 16px; }
+    .nv-wheel-hint { text-align: center; font-size: 0.72rem; color: var(--nv-muted); margin-top: 8px; }
+
+    .nv-card { background: var(--nv-panel); border: 1px solid var(--nv-border); border-radius: 10px; padding: 14px 16px; }
+    .nv-card-title { font-size: 0.72rem; font-weight: 700; color: var(--nv-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+    .nv-lon { font-family: ui-monospace, monospace; font-size: 1.1rem; color: var(--nv-warn); font-weight: 700; }
+
+    .nv-info-row { display: flex; gap: 16px; }
+    .nv-info-box { flex: 1; background: var(--nv-bg); border: 1px solid var(--nv-border); border-radius: 8px; padding: 10px 12px; }
+    .nv-info-box .nv-symbol { font-size: 1.6rem; }
+    .nv-info-box .nv-name { font-size: 1.05rem; font-weight: 700; color: #1c231d; margin: 4px 0 0; }
+    .nv-info-box .nv-name-en { font-size: 0.72rem; color: var(--nv-muted); margin-bottom: 4px; }
+    .nv-info-box .nv-meta { font-size: 0.74rem; color: var(--nv-muted); line-height: 1.5; }
+    .nv-info-box .nv-meta b { color: var(--nv-text); }
+    .nv-vargottama-flag { display: inline-block; margin-top: 6px; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: rgba(61,92,61,0.14); color: var(--nv-a); }
+
+    table.nv-table { width: 100%; border-collapse: collapse; font-size: 0.73rem; }
+    table.nv-table th { text-align: left; color: var(--nv-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--nv-border); font-size: 0.64rem; text-transform: uppercase; }
+    table.nv-table td { padding: 5px 8px; border-bottom: 1px solid var(--nv-border); font-family: ui-monospace, monospace; vertical-align: middle; text-align: center; }
+    .nv-cell { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 0.68rem; }
+    .nv-cell.nv-vargottama { background: rgba(61,92,61,0.16); color: var(--nv-a); font-weight: 700; }
+    .nv-row-active { background: rgba(166,124,31,0.1); }
+    .nv-modality-tag { font-size: 0.62rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-left: 6px; }
+    .nv-modality-movable { background: rgba(122,47,61,0.1); color: var(--nv-b); }
+    .nv-modality-fixed { background: rgba(166,124,31,0.12); color: var(--nv-warn); }
+    .nv-modality-dual { background: rgba(61,92,61,0.12); color: var(--nv-a); }
+
+    .nv-note { font-size: 0.76rem; color: var(--nv-muted); line-height: 1.5; margin-top: 4px; }
+    .nv-legend { display: flex; gap: 16px; font-size: 0.7rem; color: var(--nv-muted); margin-top: 8px; flex-wrap: wrap; }
+    .nv-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .nv-legend-dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+  </style>
+
+  <h3>നവാംശം (Navamsha D9) &amp; വർഗ്ഗോത്തമം (Vargottama): Play With It</h3>
+  <div class="nv-sub">Drag the pointer around the wheel to see any longitude's രാശി (D1 sign) alongside its computed നവാംശം (D9/Navamsha sign) update live -- along with whether that point is വർഗ്ഗോത്തമം (Vargottama, when the two signs match). The reference grid below shows the full 12x9 = 108-cell mapping.</div>
+
+  <div class="nv-body">
+    <div class="nv-wheel-col">
+      <div class="nv-wheel-wrap">
+        <svg id="nvSvg" width="380" height="380" viewBox="0 0 380 380"></svg>
+        <div class="nv-wheel-hint">Drag the pointer, or click anywhere on the ring</div>
+      </div>
+    </div>
+    <div class="nv-detail-col">
+      <div class="nv-card">
+        <div class="nv-card-title">Position</div>
+        <div class="nv-lon" id="nvLonText"></div>
+      </div>
+      <div class="nv-info-row">
+        <div class="nv-info-box">
+          <div class="nv-card-title">രാശി (D1 Sign)</div>
+          <div class="nv-symbol" id="nvD1Symbol"></div>
+          <div class="nv-name" id="nvD1Name"></div>
+          <div class="nv-name-en" id="nvD1NameEn"></div>
+          <div class="nv-meta" id="nvD1Meta"></div>
+        </div>
+        <div class="nv-info-box">
+          <div class="nv-card-title">നവാംശം (D9 Sign)</div>
+          <div class="nv-symbol" id="nvD9Symbol"></div>
+          <div class="nv-name" id="nvD9Name"></div>
+          <div class="nv-name-en" id="nvD9NameEn"></div>
+          <div class="nv-meta" id="nvD9Meta"></div>
+        </div>
+        <div class="nv-info-box">
+          <div class="nv-card-title">Division (1-9)</div>
+          <div class="nv-symbol" id="nvPadaNum"></div>
+          <div class="nv-meta" id="nvPadaMeta"></div>
+          <div id="nvVargottamaFlag"></div>
+        </div>
+      </div>
+      <div class="nv-card">
+        <div class="nv-card-title">Why the starting sign shifts</div>
+        <div class="nv-meta" id="nvRuleMeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nv-card" style="margin-top:16px; min-width:1080px;">
+    <div class="nv-card-title">The full 12 &times; 9 Navamsha grid (D1 rashi &times; division &rarr; D9 sign)</div>
+    <table class="nv-table" id="nvFullTable">
+      <thead><tr><th>D1 Rashi</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+      <tbody id="nvTableBody"></tbody>
+    </table>
+    <div class="nv-legend">
+      <span><i class="nv-legend-dot" style="background:rgba(61,92,61,0.5)"></i>വർഗ്ഗോത്തമം (Vargottama) -- D9 sign matches the row's D1 rashi</span>
+    </div>
+  </div>
+  <div class="nv-note" id="nvNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('nvWidget');
+
+    var RASHIS_ML = ['മേടം','ഇടവം','മിഥുനം','കർക്കടകം','ചിങ്ങം','കന്നി','തുലാം','വൃശ്ചികം','ധനു','മകരം','കുംഭം','മീനം'];
+    var RASHIS_EN = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+    var RASHI_EMOJI = ['🐏','🐂','👫','🦀','🦁','👩','⚖️','🦂','🏹','🐊','🏺','🐟'];
+    var RASHI_LORDS_EN = ['Mars','Venus','Mercury','Moon','Sun','Mercury','Venus','Mars','Jupiter','Saturn','Saturn','Jupiter'];
+    var RASHI_LORDS_ML = ['ചൊവ്വ','ശുക്രൻ','ബുധൻ','ചന്ദ്രൻ','സൂര്യൻ','ബുധൻ','ശുക്രൻ','ചൊവ്വ','വ്യാഴം','ശനി','ശനി','വ്യാഴം'];
+    var MODALITY_EN = ['Movable (Chara)', 'Fixed (Sthira)', 'Dual (Dwisvabhava)'];
+    var MODALITY_ML = ['ചരം', 'സ്ഥിരം', 'ദ്വിസ്വഭാവം'];
+    var MODALITY_CLASS = ['nv-modality-movable', 'nv-modality-fixed', 'nv-modality-dual'];
+
+    var RASHI_SPAN = 30;
+    var D9_SPAN = 30 / 9;
+
+    function norm(lon) { var x = lon % 360; if (x < 0) x += 360; return x; }
+
+    function modalityOf(rashiIdx) { return rashiIdx % 3; }
+
+    // Classical rule: movable sign -> the 9 divisions start counting from
+    // itself; fixed sign -> start from the 9th sign from it; dual sign ->
+    // start from the 5th sign from it. (0-based offsets: 0 / 8 / 4.) This
+    // starting sign is always itself movable -- a structural property of
+    // the rule, not a coincidence -- verified in the Node model tests.
+    function navamsaStartSign(rashiIdx) {
+      var m = modalityOf(rashiIdx);
+      var offset = m === 0 ? 0 : (m === 1 ? 8 : 4);
+      return (rashiIdx + offset) % 12;
+    }
+
+    function rashiOf(lonDeg) {
+      var lon = norm(lonDeg);
+      var rashiIdx = Math.floor(lon / RASHI_SPAN) % 12;
+      var rashiDeg = lon - rashiIdx * RASHI_SPAN;
+      var d9Idx = Math.floor(rashiDeg / D9_SPAN);
+      return { lon: lon, rashiIdx: rashiIdx, rashiDeg: rashiDeg, d9Idx: d9Idx };
+    }
+
+    function navamsaSign(lonDeg) {
+      var r = rashiOf(lonDeg);
+      var start = navamsaStartSign(r.rashiIdx);
+      var d9RashiIdx = (start + r.d9Idx) % 12;
+      return { lon: r.lon, rashiDeg: r.rashiDeg, d1RashiIdx: r.rashiIdx, d9Idx: r.d9Idx, d9RashiIdx: d9RashiIdx, pada: r.d9Idx + 1 };
+    }
+
+    function fmtDegMin(d) {
+      var deg = Math.floor(d);
+      var min = Math.round((d - deg) * 60);
+      if (min === 60) { min = 0; deg += 1; }
+      return deg + '°' + (min < 10 ? '0' : '') + min + "'";
+    }
+
+    // ---------------- SVG wheel ----------------
+    var svg = document.getElementById('nvSvg');
+    var CX = 190, CY = 190, R_OUTER = 170, R_RASHI_IN = 130, R_LABEL = 150, R_HANDLE = 170;
+
+    function polar(cx, cy, r, angleDeg) {
+      var rad = (angleDeg - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+    function arcPath(r1, r2, a1, a2) {
+      var p1 = polar(CX, CY, r2, a1), p2 = polar(CX, CY, r2, a2);
+      var p3 = polar(CX, CY, r1, a2), p4 = polar(CX, CY, r1, a1);
+      var large = (a2 - a1) > 180 ? 1 : 0;
+      return 'M ' + p1.x + ' ' + p1.y + ' A ' + r2 + ' ' + r2 + ' 0 ' + large + ' 1 ' + p2.x + ' ' + p2.y +
+        ' L ' + p3.x + ' ' + p3.y + ' A ' + r1 + ' ' + r1 + ' 0 ' + large + ' 0 ' + p4.x + ' ' + p4.y + ' Z';
+    }
+    function svgEl(tag, attrs) {
+      var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (var k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    }
+
+    var rashiWedges = [];
+    for (var ri = 0; ri < 12; ri++) {
+      var a1 = ri * 30, a2 = a1 + 30;
+      var wedge = svgEl('path', { d: arcPath(R_RASHI_IN, R_OUTER, a1, a2), fill: ri % 2 === 0 ? '#ffffff' : '#f7f6f2', stroke: '#cdd6cc', 'stroke-width': '1' });
+      svg.appendChild(wedge);
+      rashiWedges.push(wedge);
+      var mid = polar(CX, CY, R_LABEL, a1 + 15);
+      var label = svgEl('text', { x: mid.x, y: mid.y, fill: '#1c231d', 'font-size': '20', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
+      label.textContent = RASHI_EMOJI[ri];
+      svg.appendChild(label);
+    }
+
+    // D9 division tick marks (9 per rashi, finer than the rashi boundaries)
+    for (var ri2 = 0; ri2 < 12; ri2++) {
+      for (var di = 0; di < 9; di++) {
+        var ta = ri2 * RASHI_SPAN + di * D9_SPAN;
+        var isRashiStart = di === 0;
+        var t1 = polar(CX, CY, R_RASHI_IN - (isRashiStart ? 4 : 2), ta);
+        var t2 = polar(CX, CY, R_RASHI_IN + (isRashiStart ? 4 : 2), ta);
+        svg.appendChild(svgEl('line', { x1: t1.x, y1: t1.y, x2: t2.x, y2: t2.y, stroke: isRashiStart ? '#cdd6cc' : '#5c675d', 'stroke-width': isRashiStart ? '1.5' : '0.75' }));
+      }
+    }
+
+    var divHighlight = svgEl('path', { fill: 'rgba(166,124,31,0.28)', stroke: 'none' });
+    svg.insertBefore(divHighlight, svg.firstChild.nextSibling);
+
+    svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: R_RASHI_IN - 8, fill: '#ffffff', stroke: '#cdd6cc' }));
+    var handleLine = svgEl('line', { x1: CX, y1: CY, x2: CX, y2: CY - R_HANDLE, stroke: '#7a2f3d', 'stroke-width': '2' });
+    var handleDot = svgEl('circle', { cx: CX, cy: CY - R_HANDLE, r: 8, fill: '#7a2f3d', stroke: '#1c231d', 'stroke-width': '2', style: 'cursor:grab;' });
+    svg.appendChild(handleLine);
+    svg.appendChild(handleDot);
+
+    var lon = 11 + 35 / 60; // default: the worked example used to verify this widget's own logic (Aries 11d35')
+    var d1SymbolEl = document.getElementById('nvD1Symbol');
+    var d1NameEl = document.getElementById('nvD1Name');
+    var d1NameEnEl = document.getElementById('nvD1NameEn');
+    var d1MetaEl = document.getElementById('nvD1Meta');
+    var d9SymbolEl = document.getElementById('nvD9Symbol');
+    var d9NameEl = document.getElementById('nvD9Name');
+    var d9NameEnEl = document.getElementById('nvD9NameEn');
+    var d9MetaEl = document.getElementById('nvD9Meta');
+    var padaNumEl = document.getElementById('nvPadaNum');
+    var padaMetaEl = document.getElementById('nvPadaMeta');
+    var vargottamaFlagEl = document.getElementById('nvVargottamaFlag');
+    var lonTextEl = document.getElementById('nvLonText');
+    var ruleMetaEl = document.getElementById('nvRuleMeta');
+    var tableBody = document.getElementById('nvTableBody');
+
+    function render() {
+      var n = navamsaSign(lon);
+
+      var pt = polar(CX, CY, R_HANDLE, lon);
+      handleLine.setAttribute('x2', pt.x);
+      handleLine.setAttribute('y2', pt.y);
+      handleDot.setAttribute('cx', pt.x);
+      handleDot.setAttribute('cy', pt.y);
+
+      var divStart = n.d1RashiIdx * RASHI_SPAN + n.d9Idx * D9_SPAN;
+      divHighlight.setAttribute('d', arcPath(R_RASHI_IN - 8, R_RASHI_IN, divStart, divStart + D9_SPAN));
+
+      rashiWedges.forEach(function(w, i) {
+        w.setAttribute('fill', i === n.d1RashiIdx ? '#f1e2e5' : (i % 2 === 0 ? '#ffffff' : '#f7f6f2'));
+        w.setAttribute('stroke', i === n.d1RashiIdx ? '#7a2f3d' : '#cdd6cc');
+      });
+
+      lonTextEl.textContent = fmtDegMin(n.rashiDeg) + ' ' + RASHIS_ML[n.d1RashiIdx] + '  (' + fmtDegMin(n.lon) + ' absolute)';
+
+      d1SymbolEl.textContent = RASHI_EMOJI[n.d1RashiIdx];
+      d1NameEl.textContent = RASHIS_ML[n.d1RashiIdx];
+      d1NameEnEl.textContent = RASHIS_EN[n.d1RashiIdx];
+      var d1Modality = modalityOf(n.d1RashiIdx);
+      d1MetaEl.innerHTML = 'Lord: <b>' + RASHI_LORDS_ML[n.d1RashiIdx] + '</b> (' + RASHI_LORDS_EN[n.d1RashiIdx] + ')<br>' + fmtDegMin(n.rashiDeg) + ' into this rashi' +
+        '<span class="nv-modality-tag ' + MODALITY_CLASS[d1Modality] + '">' + MODALITY_ML[d1Modality] + '</span>';
+
+      d9SymbolEl.textContent = RASHI_EMOJI[n.d9RashiIdx];
+      d9NameEl.textContent = RASHIS_ML[n.d9RashiIdx];
+      d9NameEnEl.textContent = RASHIS_EN[n.d9RashiIdx];
+      d9MetaEl.innerHTML = 'Lord: <b>' + RASHI_LORDS_ML[n.d9RashiIdx] + '</b> (' + RASHI_LORDS_EN[n.d9RashiIdx] + ')';
+
+      padaNumEl.textContent = n.pada + ' of 9';
+      padaMetaEl.innerHTML = 'within ' + RASHIS_ML[n.d1RashiIdx] + ' -- the same 3°20\' unit as a nakshatra pada, just grouped by rashi instead';
+
+      if (n.d1RashiIdx === n.d9RashiIdx) {
+        vargottamaFlagEl.innerHTML = '<span class="nv-vargottama-flag">വർഗ്ഗോത്തമം Vargottama</span>';
+      } else {
+        vargottamaFlagEl.innerHTML = '';
+      }
+
+      var startSign = navamsaStartSign(n.d1RashiIdx);
+      ruleMetaEl.innerHTML = RASHIS_ML[n.d1RashiIdx] + ' (' + RASHIS_EN[n.d1RashiIdx] + ') is ' + MODALITY_ML[d1Modality] + ' (' + MODALITY_EN[d1Modality] + '), so its 9 divisions start counting from <b>' + RASHIS_ML[startSign] + '</b> (' + RASHIS_EN[startSign] + ') -- always itself a movable sign, whichever rashi you start from.';
+
+      Array.prototype.forEach.call(tableBody.children, function(tr, i) {
+        tr.classList.toggle('nv-row-active', i === n.d1RashiIdx);
+      });
+    }
+
+    function setFromAngle(clientX, clientY) {
+      var rect = svg.getBoundingClientRect();
+      var scale = 380 / rect.width;
+      var x = (clientX - rect.left) * scale - CX;
+      var y = (clientY - rect.top) * scale - CY;
+      var angle = Math.atan2(y, x) * 180 / Math.PI + 90;
+      if (angle < 0) angle += 360;
+      lon = angle;
+      render();
+    }
+
+    var dragging = false;
+    svg.addEventListener('mousedown', function(e) { dragging = true; e.preventDefault(); setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', function(e) { if (dragging) setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', function() { dragging = false; });
+    svg.addEventListener('touchstart', function(e) {
+      dragging = true;
+      var t = e.touches[0];
+      setFromAngle(t.clientX, t.clientY);
+    }, { passive: true });
+    svg.addEventListener('touchmove', function(e) {
+      if (!dragging) return;
+      var t = e.touches[0];
+      setFromAngle(t.clientX, t.clientY);
+    }, { passive: true });
+    window.addEventListener('touchend', function() { dragging = false; });
+
+    // ---------------- full 12x9 grid ----------------
+    tableBody.innerHTML = RASHIS_ML.map(function(name, ri) {
+      var cells = '';
+      for (var p = 0; p < 9; p++) {
+        var mid = ri * RASHI_SPAN + p * D9_SPAN + D9_SPAN / 2;
+        var n2 = navamsaSign(mid);
+        var isVarg = n2.d9RashiIdx === ri;
+        cells += '<td><span class="nv-cell' + (isVarg ? ' nv-vargottama' : '') + '">' + RASHI_EMOJI[n2.d9RashiIdx] + ' ' + RASHIS_ML[n2.d9RashiIdx] + '</span></td>';
+      }
+      return '<tr><td>' + name + ' <span style="color:var(--nv-muted); font-size:0.68rem;">(' + RASHIS_EN[ri] + ')</span></td>' + cells + '</tr>';
+    }).join('');
+
+    document.getElementById('nvNote').textContent = 'Navamsha division rule (movable signs start counting from themselves, fixed signs from the 9th sign from them, dual signs from the 5th) follows the standard Parashari framework shared across Jyotisha schools, including Kerala -- independently verified against a published worked example (Aries 11 deg 35\' falling in the 4th of 9 divisions, mapping to Karka/Cancer) before publishing. Each Navamsha division is the same 3 deg 20\' arc as a nakshatra pada on the rashi/nakshatra page, just grouped by rashi (9 per sign) instead of by nakshatra (4 per nakshatra) -- the same underlying 3 deg 20\' grid, viewed two ways. If a specific reference text describes a detail differently, that text wins.';
+
+    render();
+  })();
+  </script>
+</div>

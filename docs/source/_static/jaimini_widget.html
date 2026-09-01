@@ -1,0 +1,229 @@
+<div class="jm-root" id="jmWidget">
+  <style>
+    #jmWidget {
+      --jm-bg: #eef1ee;
+      --jm-panel: #ffffff;
+      --jm-border: #cdd6cc;
+      --jm-text: #1c231d;
+      --jm-muted: #5c675d;
+      --jm-a: #3d5c3d;
+      --jm-b: #7a2f3d;
+      --jm-bad: #b0432a;
+      --jm-warn: #a67c1f;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--jm-bg);
+      color: var(--jm-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #jmWidget * { box-sizing: border-box; }
+    #jmWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #jmWidget h4 { margin: 0 0 4px; font-size: 0.95rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #jmWidget .jm-sub { color: var(--jm-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .jm-section { display: flex; gap: 20px; min-width: 1080px; margin-bottom: 16px; }
+    .jm-card { background: var(--jm-panel); border: 1px solid var(--jm-border); border-radius: 10px; padding: 14px 16px; flex: 1; }
+    .jm-card-title { font-size: 0.72rem; font-weight: 700; color: var(--jm-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+
+    .jm-karaka-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+    .jm-karaka-row label { flex: 0 0 90px; font-size: 0.78rem; }
+    .jm-karaka-row input[type="range"] { flex: 1 1 auto; }
+    .jm-karaka-row .jm-deg-val { flex: 0 0 56px; font-family: ui-monospace, monospace; font-size: 0.76rem; text-align: right; }
+    .jm-karaka-row .jm-rahu-note { flex: 0 0 140px; font-size: 0.66rem; color: var(--jm-muted); }
+
+    table.jm-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    table.jm-table th { text-align: left; color: var(--jm-muted); font-weight: 600; padding: 5px 8px; border-bottom: 1px solid var(--jm-border); font-size: 0.62rem; text-transform: uppercase; }
+    table.jm-table td { padding: 4px 8px; border-bottom: 1px solid var(--jm-border); }
+    .jm-rank-1 { color: var(--jm-b); font-weight: 700; }
+    .jm-rank-8 { color: var(--jm-bad); font-weight: 700; }
+
+    .jm-select-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .jm-field { flex: 1 1 0; min-width: 140px; }
+    .jm-field label { display: block; font-size: 0.72rem; color: var(--jm-muted); margin-bottom: 4px; }
+    .jm-field select { width: 100%; background: var(--jm-bg); border: 1px solid var(--jm-border); border-radius: 6px; color: var(--jm-text); padding: 6px 8px; font-size: 0.85rem; font-family: inherit; }
+
+    .jm-result { font-size: 0.9rem; font-weight: 700; color: var(--jm-b); margin-top: 6px; }
+    .jm-meta { font-size: 0.76rem; color: var(--jm-muted); line-height: 1.6; margin-top: 6px; }
+    .jm-meta b { color: var(--jm-text); }
+    .jm-exception-flag { display: inline-block; margin-top: 6px; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: rgba(166,124,31,0.16); color: var(--jm-warn); }
+
+    .jm-note { font-size: 0.76rem; color: var(--jm-muted); line-height: 1.5; margin-top: 4px; }
+  </style>
+
+  <h3>ചരകാരകങ്ങളും (Chara Karakas) ആരൂഢ ലഗ്നവും (Arudha/Upapada Lagna): Play With It</h3>
+  <div class="jm-sub">Two independent Jaimini mechanisms, both pure counting. Set each graha's degree-within-sign to rank the 8 Chara Karakas live, or pick a house/lord pair to compute its Arudha Pada -- Arudha Lagna and Upapada Lagna are just this same calculation applied to house 1 and house 12.</div>
+
+  <div class="jm-section">
+    <div class="jm-card" style="flex: 1.3;">
+      <div class="jm-card-title">Chara Karaka ranking (8-karaka scheme)</div>
+      <div id="jmKarakaSliders"></div>
+      <div class="jm-note" style="margin-top:8px;">Rahu's karaka-degree is always 30 minus its raw degree-within-sign (reverse longitude, since Rahu is always retrograde) -- computed automatically above.</div>
+    </div>
+    <div class="jm-card">
+      <div class="jm-card-title">Ranked (highest degree = Atmakaraka)</div>
+      <table class="jm-table" id="jmKarakaTable">
+        <thead><tr><th>#</th><th>Karaka</th><th>Graha</th><th>Degree</th></tr></thead>
+        <tbody id="jmKarakaBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="jm-section">
+    <div class="jm-card">
+      <div class="jm-card-title">Arudha Pada calculator (works for any house -- 1st = Arudha Lagna, 12th = Upapada Lagna)</div>
+      <div class="jm-select-row">
+        <div class="jm-field">
+          <label for="jmHouseNum">Which house?</label>
+          <select id="jmHouseNum"></select>
+        </div>
+        <div class="jm-field">
+          <label for="jmHouseSign">That house's sign</label>
+          <select id="jmHouseSign"></select>
+        </div>
+        <div class="jm-field">
+          <label for="jmLordSign">Sign occupied by that house's lord</label>
+          <select id="jmLordSign"></select>
+        </div>
+      </div>
+      <div class="jm-result" id="jmResult"></div>
+      <div class="jm-meta" id="jmMeta"></div>
+      <div id="jmExceptionFlag"></div>
+    </div>
+  </div>
+
+  <div class="jm-note" id="jmNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('jmWidget');
+
+    var RASHIS_ML = ['മേടം','ഇടവം','മിഥുനം','കർക്കടകം','ചിങ്ങം','കന്നി','തുലാം','വൃശ്ചികം','ധനു','മകരം','കുംഭം','മീനം'];
+    var RASHIS_EN = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+
+    var KARAKA_NAMES = ['Atmakaraka', 'Amatyakaraka', 'Bhratrikaraka', 'Matrikaraka', 'Pitrikaraka', 'Putrakaraka', 'Gnatikaraka', 'Darakaraka'];
+    var GRAHAS_8 = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu'];
+    var GRAHAS_ML = ['സൂര്യൻ', 'ചന്ദ്രൻ', 'ചൊവ്വ', 'ബുധൻ', 'വ്യാഴം', 'ശുക്രൻ', 'ശനി', 'രാഹു'];
+
+    function norm12(i) { var x = i % 12; if (x < 0) x += 12; return x; }
+
+    function rahuKarakaDegree(rawDegIntoSign) { return 30 - rawDegIntoSign; }
+
+    function rankKarakas(karakaDegrees) {
+      var priority = {};
+      GRAHAS_8.forEach(function(g, i) { priority[g] = i; });
+      var entries = GRAHAS_8.map(function(g) { return { graha: g, degree: karakaDegrees[g] }; });
+      entries.sort(function(a, b) {
+        if (b.degree !== a.degree) return b.degree - a.degree;
+        return priority[a.graha] - priority[b.graha];
+      });
+      return entries.map(function(e, i) { return { graha: e.graha, degree: e.degree, rank: i, name: KARAKA_NAMES[i] }; });
+    }
+
+    // Verified against an independently-sourced worked example (Leo
+    // Lagna, Sun in Leo -> Taurus). An earlier draft used +10 for the
+    // exception correction, which reads naturally from "advance to the
+    // 10th house" but is off by one -- "10th house" is 1-based inclusive
+    // counting, i.e. +9 in 0-based arithmetic. Caught by that exact
+    // worked example before this ever reached the page.
+    function arudhaPada(houseSignIdx, lordSignIdx) {
+      var distance = norm12(lordSignIdx - houseSignIdx);
+      var rawResult = norm12(lordSignIdx + distance);
+      var result = rawResult;
+      var exceptionApplied = false;
+      if (rawResult === houseSignIdx || rawResult === norm12(houseSignIdx + 6)) {
+        result = norm12(rawResult + 9);
+        exceptionApplied = true;
+      }
+      return { distance: distance, rawResult: rawResult, result: result, exceptionApplied: exceptionApplied };
+    }
+
+    // ---------------- Chara Karaka sliders ----------------
+    var slidersEl = document.getElementById('jmKarakaSliders');
+    var karakaDegrees = { Sun: 12, Moon: 25, Mars: 8, Mercury: 19, Jupiter: 3, Venus: 27, Saturn: 15, Rahu: 21 };
+    slidersEl.innerHTML = GRAHAS_8.map(function(g, i) {
+      if (g === 'Rahu') {
+        return '<div class="jm-karaka-row"><label>' + GRAHAS_ML[i] + ' (' + g + ')</label>' +
+          '<input type="range" id="jmSlider_' + g + '" min="0" max="30" step="0.5" value="' + (30 - karakaDegrees.Rahu) + '">' +
+          '<span class="jm-deg-val" id="jmVal_' + g + '"></span>' +
+          '<span class="jm-rahu-note">raw degree (reversed above)</span></div>';
+      }
+      return '<div class="jm-karaka-row"><label>' + GRAHAS_ML[i] + ' (' + g + ')</label>' +
+        '<input type="range" id="jmSlider_' + g + '" min="0" max="30" step="0.5" value="' + karakaDegrees[g] + '">' +
+        '<span class="jm-deg-val" id="jmVal_' + g + '"></span></div>';
+    }).join('');
+
+    GRAHAS_8.forEach(function(g) {
+      var slider = document.getElementById('jmSlider_' + g);
+      slider.addEventListener('input', function() {
+        if (g === 'Rahu') {
+          karakaDegrees.Rahu = rahuKarakaDegree(parseFloat(slider.value));
+        } else {
+          karakaDegrees[g] = parseFloat(slider.value);
+        }
+        renderKarakas();
+      });
+    });
+
+    var karakaBody = document.getElementById('jmKarakaBody');
+    function renderKarakas() {
+      GRAHAS_8.forEach(function(g) {
+        var raw = g === 'Rahu' ? document.getElementById('jmSlider_Rahu').value : karakaDegrees[g];
+        document.getElementById('jmVal_' + g).textContent = (g === 'Rahu' ? karakaDegrees.Rahu.toFixed(1) + '° (raw ' + parseFloat(raw).toFixed(1) + '°)' : parseFloat(raw).toFixed(1) + '°');
+      });
+      var ranked = rankKarakas(karakaDegrees);
+      karakaBody.innerHTML = ranked.map(function(r) {
+        var mlIdx = GRAHAS_8.indexOf(r.graha);
+        var cls = r.rank === 0 ? 'jm-rank-1' : (r.rank === 7 ? 'jm-rank-8' : '');
+        return '<tr class="' + cls + '"><td>' + (r.rank + 1) + '</td><td>' + r.name + '</td><td>' + GRAHAS_ML[mlIdx] + ' (' + r.graha + ')</td><td>' + r.degree.toFixed(1) + '°</td></tr>';
+      }).join('');
+    }
+
+    // ---------------- Arudha Pada calculator ----------------
+    var houseNumEl = document.getElementById('jmHouseNum');
+    var houseSignEl = document.getElementById('jmHouseSign');
+    var lordSignEl = document.getElementById('jmLordSign');
+    houseNumEl.innerHTML = Array.from({ length: 12 }, function(_, i) {
+      var suffix = i === 0 ? ' (Arudha Lagna)' : (i === 11 ? ' (Upapada Lagna)' : '');
+      return '<option value="' + (i + 1) + '">' + (i + 1) + suffix + '</option>';
+    }).join('');
+    [houseSignEl, lordSignEl].forEach(function(sel) {
+      sel.innerHTML = RASHIS_ML.map(function(name, i) { return '<option value="' + i + '">' + name + ' (' + RASHIS_EN[i] + ')</option>'; }).join('');
+    });
+    lordSignEl.selectedIndex = 3;
+
+    var resultEl = document.getElementById('jmResult');
+    var metaEl = document.getElementById('jmMeta');
+    var exceptionFlagEl = document.getElementById('jmExceptionFlag');
+
+    function renderArudha() {
+      var houseSignIdx = parseInt(houseSignEl.value, 10);
+      var lordSignIdx = parseInt(lordSignEl.value, 10);
+      var houseNum = parseInt(houseNumEl.value, 10);
+      var a = arudhaPada(houseSignIdx, lordSignIdx);
+
+      var label = houseNum === 1 ? 'Arudha Lagna (AL)' : (houseNum === 12 ? 'Upapada Lagna (UL)' : 'Arudha of house ' + houseNum + ' (A' + houseNum + ')');
+      resultEl.textContent = label + ': ' + RASHIS_ML[a.result] + ' (' + RASHIS_EN[a.result] + ')';
+      metaEl.innerHTML = 'Distance from house ' + houseNum + ' to its lord: <b>' + (a.distance + 1) + ' signs</b> (1-based inclusive) -- projecting that same distance forward from the lord\'s sign gives ' +
+        RASHIS_ML[a.rawResult] + ' (' + RASHIS_EN[a.rawResult] + ')' + (a.exceptionApplied ? ', before the exception correction.' : '.');
+
+      if (a.exceptionApplied) {
+        exceptionFlagEl.innerHTML = '<span class="jm-exception-flag">Exception applied: the raw result landed on the source house or its opposite, so 9 signs (the "10th house", 1-based) were added instead</span>';
+      } else {
+        exceptionFlagEl.innerHTML = '';
+      }
+    }
+
+    houseNumEl.addEventListener('change', renderArudha);
+    houseSignEl.addEventListener('change', renderArudha);
+    lordSignEl.addEventListener('change', renderArudha);
+
+    document.getElementById('jmNote').textContent = 'Chara Karaka ranking, Rahu\'s reverse-longitude rule, and the generic Arudha Pada projection (including its 1st/7th-house exception) follow the standard Jaimini framework used across Jyotisha schools, including Kerala, and were independently verified before publishing -- including a worked example (Leo Lagna, Sun in Leo) that specifically exercises the exception rule. One genuine, disclosed dispute: some classical schools use a 7-karaka scheme that excludes Rahu entirely, which changes the Atmakaraka/Darakaraka result in roughly a quarter of charts -- this widget implements the more commonly used 8-karaka scheme (including Rahu) rather than asserting either as the sole correct one. If a specific reference text describes a detail differently, that text wins.';
+
+    renderKarakas();
+    renderArudha();
+  })();
+  </script>
+</div>

@@ -1,0 +1,225 @@
+<div class="av-root" id="avWidget">
+  <style>
+    #avWidget {
+      --av-bg: #eef1ee;
+      --av-panel: #ffffff;
+      --av-border: #cdd6cc;
+      --av-text: #1c231d;
+      --av-muted: #5c675d;
+      --av-a: #3d5c3d;
+      --av-b: #7a2f3d;
+      --av-bad: #b0432a;
+      --av-warn: #a67c1f;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--av-bg);
+      color: var(--av-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #avWidget * { box-sizing: border-box; }
+    #avWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #avWidget h4 { margin: 0 0 4px; font-size: 0.95rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #avWidget .av-sub { color: var(--av-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .av-section { min-width: 1080px; margin-bottom: 16px; }
+    .av-card { background: var(--av-panel); border: 1px solid var(--av-border); border-radius: 10px; padding: 14px 16px; }
+    .av-card-title { font-size: 0.72rem; font-weight: 700; color: var(--av-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+
+    table.av-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+    table.av-table th { text-align: center; color: var(--av-muted); font-weight: 600; padding: 5px 4px; border-bottom: 1px solid var(--av-border); font-size: 0.62rem; text-transform: uppercase; }
+    table.av-table td { padding: 3px 4px; border-bottom: 1px solid var(--av-border); text-align: center; }
+    table.av-table td.av-label { text-align: left; color: var(--av-muted); font-size: 0.66rem; white-space: nowrap; }
+    .av-bindu-input { width: 34px; text-align: center; background: var(--av-bg); border: 1px solid var(--av-border); border-radius: 4px; color: var(--av-text); font-family: ui-monospace, monospace; font-size: 0.72rem; padding: 2px; }
+    .av-occ-cell input[type="checkbox"] { transform: scale(1.1); }
+    .av-zero { color: var(--av-muted); }
+    .av-changed { color: var(--av-b); font-weight: 700; }
+    .av-tie-row { background: rgba(166,124,31,0.08); }
+
+    .av-result-row { display: flex; gap: 20px; margin-top: 12px; }
+    .av-result-row .av-card { flex: 1; }
+    .av-pinda-val { font-size: 1.3rem; font-weight: 700; color: var(--av-b); font-family: ui-monospace, monospace; }
+
+    .av-kakshya-bar { display: flex; height: 30px; border-radius: 6px; overflow: hidden; border: 1px solid var(--av-border); margin-top: 8px; }
+    .av-kakshya-seg { display: flex; align-items: center; justify-content: center; font-size: 0.62rem; font-weight: 700; color: #1c231d; }
+    .av-kakshya-slider { width: 100%; margin-top: 10px; }
+    .av-kakshya-result { font-size: 0.85rem; font-weight: 700; color: var(--av-b); margin-top: 6px; }
+
+    .av-note { font-size: 0.76rem; color: var(--av-muted); line-height: 1.5; margin-top: 4px; }
+    .av-legend { display: flex; gap: 16px; font-size: 0.68rem; color: var(--av-muted); margin-top: 8px; flex-wrap: wrap; }
+  </style>
+
+  <h3>അഷ്ടകവർഗ്ഗ ശോധന (Ashtakavarga Shodhana) &amp; കക്ഷ്യ (Kakshya): Play With It</h3>
+  <div class="av-sub">Enter a planet's raw 12-sign Bhinna Ashtakavarga bindu count and mark which signs currently hold a planet, to see both reduction stages live -- verified against a real published worked example (Mahatma Gandhi's horoscope), not just the stated rule.</div>
+
+  <div class="av-section">
+    <div class="av-card">
+      <div class="av-card-title">Raw bindus + occupancy (edit any cell)</div>
+      <table class="av-table" id="avInputTable"></table>
+    </div>
+  </div>
+
+  <div class="av-section">
+    <div class="av-card">
+      <div class="av-card-title">After Trikona Shodhana, then Ekadhipatya Shodhana</div>
+      <table class="av-table" id="avResultTable"></table>
+      <div class="av-legend">
+        <span><b class="av-changed">bold</b> = changed by this reduction step</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="av-result-row">
+    <div class="av-card">
+      <div class="av-card-title">Rashi Pinda (this planet's own contribution)</div>
+      <div class="av-pinda-val" id="avRashiPinda"></div>
+      <div class="av-note">Sum of (final bindus x Rashi Gunakar) across all 12 signs -- Graha Pinda (the other half of Shodhya Pinda) additionally needs every other planet's chart position, so it isn't computed here; see the page text.</div>
+    </div>
+    <div class="av-card">
+      <div class="av-card-title">Kakshya (drag to any degree within a sign)</div>
+      <input type="range" class="av-kakshya-slider" id="avKakshyaSlider" min="0" max="30" step="0.25" value="5">
+      <div class="av-kakshya-bar" id="avKakshyaBar"></div>
+      <div class="av-kakshya-result" id="avKakshyaResult"></div>
+    </div>
+  </div>
+
+  <div class="av-note" id="avNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('avWidget');
+
+    var RASHIS_ML = ['മേടം','ഇടവം','മിഥുനം','കർക്കടകം','ചിങ്ങം','കന്നി','തുലാം','വൃശ്ചികം','ധനു','മകരം','കുംഭം','മീനം'];
+    var RASHIS_EN = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+
+    var TRIKONA_GROUPS = [[0, 4, 8], [1, 5, 9], [2, 6, 10], [3, 7, 11]];
+    var EKADHIPATYA_PAIRS = [[0, 7], [1, 6], [2, 5], [8, 11], [9, 10]];
+    var RASHI_GUNAKAR = [7, 10, 8, 4, 10, 5, 7, 8, 9, 5, 11, 12];
+    var KAKSHYA_ORDER_EN = ['Saturn', 'Jupiter', 'Mars', 'Sun', 'Venus', 'Mercury', 'Moon', 'Lagna'];
+    var KAKSHYA_ORDER_ML = ['ശനി', 'വ്യാഴം', 'ചൊവ്വ', 'സൂര്യൻ', 'ശുക്രൻ', 'ബുധൻ', 'ചന്ദ്രൻ', 'ലഗ്നം'];
+    var KAKSHYA_COLORS = ['#a9c0cb', '#aac2a4', '#e3b3a3', '#e8c98a', '#e3bcc5', '#d6cd8f', '#eae2c9', '#d3c2e8'];
+    var KAKSHYA_SPAN = 30 / 8;
+
+    function trikonaShodhana(bindus) {
+      var result = bindus.slice();
+      TRIKONA_GROUPS.forEach(function(group) {
+        var vals = group.map(function(i) { return bindus[i]; });
+        var min = Math.min.apply(null, vals);
+        group.forEach(function(i) { result[i] = bindus[i] - min; });
+      });
+      return result;
+    }
+
+    // Verified against a real published worked example (Mahatma
+    // Gandhi's horoscope, M.S. Mehta's "Ashtakvarga -- Concept &
+    // Application"), which reproduces both branches of the "one
+    // occupied" case. Priority order matters: "both occupied" must be
+    // checked before the tie-check below it, since the classical rule
+    // for co-occupied pairs is an unconditional no-op -- an earlier
+    // draft got this ordering backwards and a tied, both-occupied pair
+    // was wrongly zeroed before the bug was caught.
+    function ekadhipatyaShodhana(bindus, occupied) {
+      var result = bindus.slice();
+      EKADHIPATYA_PAIRS.forEach(function(pair) {
+        var i = pair[0], j = pair[1];
+        var a = bindus[i], b = bindus[j];
+        var iOcc = !!occupied[i], jOcc = !!occupied[j];
+        if (iOcc && jOcc) return;
+        if (a === 0 || b === 0) return;
+        if (a === b) { result[i] = 0; result[j] = 0; return; }
+        if (!iOcc && !jOcc) {
+          var m = Math.min(a, b);
+          result[i] = m; result[j] = m;
+          return;
+        }
+        var occIdx = iOcc ? i : j;
+        var vacIdx = iOcc ? j : i;
+        var occVal = bindus[occIdx], vacVal = bindus[vacIdx];
+        result[vacIdx] = occVal > vacVal ? 0 : occVal;
+      });
+      return result;
+    }
+
+    function rashiPinda(bindus) {
+      return bindus.reduce(function(sum, v, i) { return sum + v * RASHI_GUNAKAR[i]; }, 0);
+    }
+
+    function norm(x) { var r = x % 360; if (r < 0) r += 360; return r; }
+    function kakshyaOf(lonDeg) {
+      var rashiDeg = norm(lonDeg) % 30;
+      var idx = Math.min(7, Math.floor(rashiDeg / KAKSHYA_SPAN));
+      return { idx: idx, rashiDeg: rashiDeg };
+    }
+
+    // ---------------- input table (raw bindus + occupancy) ----------------
+    var inputTable = document.getElementById('avInputTable');
+    var defaultRaw = [4, 4, 4, 5, 5, 7, 2, 2, 6, 2, 3, 4]; // Gandhi's Sun BAV, the verified worked example
+    var defaultOcc = [false, false, false, false, false, true, false, false, false, false, false, false]; // Virgo occupied
+
+    var headerRow = '<tr><th>Sign</th>' + RASHIS_ML.map(function(n, i) { return '<th>' + n + '<br><span style="opacity:0.7">' + RASHIS_EN[i] + '</span></th>'; }).join('') + '</tr>';
+    var bindusRow = '<tr><td class="av-label">Raw bindus</td>' + RASHIS_ML.map(function(n, i) {
+      return '<td><input class="av-bindu-input" type="number" min="0" max="8" id="avRaw_' + i + '" value="' + defaultRaw[i] + '"></td>';
+    }).join('') + '</tr>';
+    var occRow = '<tr><td class="av-label">Occupied?</td>' + RASHIS_ML.map(function(n, i) {
+      return '<td class="av-occ-cell"><input type="checkbox" id="avOcc_' + i + '"' + (defaultOcc[i] ? ' checked' : '') + '></td>';
+    }).join('') + '</tr>';
+    inputTable.innerHTML = headerRow + bindusRow + occRow;
+
+    for (var i = 0; i < 12; i++) {
+      document.getElementById('avRaw_' + i).addEventListener('input', render);
+      document.getElementById('avOcc_' + i).addEventListener('change', render);
+    }
+
+    var resultTable = document.getElementById('avResultTable');
+    var rashiPindaEl = document.getElementById('avRashiPinda');
+
+    function render() {
+      var raw = [];
+      var occ = [];
+      for (var i = 0; i < 12; i++) {
+        raw.push(parseInt(document.getElementById('avRaw_' + i).value, 10) || 0);
+        occ.push(document.getElementById('avOcc_' + i).checked);
+      }
+
+      var afterTrikona = trikonaShodhana(raw);
+      var afterEka = ekadhipatyaShodhana(afterTrikona, occ);
+
+      var rowTrikona = '<tr><td class="av-label">After Trikona Shodhana</td>' + afterTrikona.map(function(v, i) {
+        var cls = v !== raw[i] ? 'av-changed' : (v === 0 ? 'av-zero' : '');
+        return '<td class="' + cls + '">' + v + '</td>';
+      }).join('') + '</tr>';
+      var rowEka = '<tr><td class="av-label">After Ekadhipatya Shodhana</td>' + afterEka.map(function(v, i) {
+        var cls = v !== afterTrikona[i] ? 'av-changed' : (v === 0 ? 'av-zero' : '');
+        return '<td class="' + cls + '">' + v + '</td>';
+      }).join('') + '</tr>';
+      resultTable.innerHTML = '<tr><th>Sign</th>' + RASHIS_ML.map(function(n) { return '<th>' + n + '</th>'; }).join('') + '</tr>' + rowTrikona + rowEka;
+
+      rashiPindaEl.textContent = rashiPinda(afterEka);
+    }
+
+    // ---------------- Kakshya bar ----------------
+    var kakshyaBarEl = document.getElementById('avKakshyaBar');
+    kakshyaBarEl.innerHTML = KAKSHYA_ORDER_EN.map(function(name, i) {
+      return '<div class="av-kakshya-seg" id="avKSeg_' + i + '" style="width:12.5%; background:' + KAKSHYA_COLORS[i] + ';">' + KAKSHYA_ORDER_ML[i] + '</div>';
+    }).join('');
+    var kakshyaSlider = document.getElementById('avKakshyaSlider');
+    var kakshyaResultEl = document.getElementById('avKakshyaResult');
+    function renderKakshya() {
+      var deg = parseFloat(kakshyaSlider.value);
+      var k = kakshyaOf(deg);
+      for (var i = 0; i < 8; i++) {
+        document.getElementById('avKSeg_' + i).style.outline = i === k.idx ? '2px solid #1c231d' : 'none';
+      }
+      kakshyaResultEl.textContent = deg.toFixed(2) + '° into the sign → Kakshya ' + (k.idx + 1) + ' of 8: ' + KAKSHYA_ORDER_ML[k.idx] + ' (' + KAKSHYA_ORDER_EN[k.idx] + ')';
+    }
+    kakshyaSlider.addEventListener('input', renderKakshya);
+
+    document.getElementById('avNote').textContent = 'Trikona Shodhana and Ekadhipatya Shodhana verified against a real published worked example -- Mahatma Gandhi’s horoscope in M.S. Mehta’s "Ashtakvarga: Concept & Application" -- which gives raw bindus and both reduction stages explicitly, not just the stated rule; this widget defaults to that exact example (Gandhi’s Sun Bhinna Ashtakavarga). The Rashi Gunakar table shown implicitly in the Rashi Pinda figure, and the Kakshya order and span, are likewise cross-checked against that source. Graha Pinda (needed for full Shodhya Pinda) requires every other planet’s chart position, not just this one planet’s own table, so it is described but not computed interactively here. If a specific reference text describes a detail differently, that text wins.';
+
+    render();
+    renderKakshya();
+  })();
+  </script>
+</div>

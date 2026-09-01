@@ -1,0 +1,303 @@
+<div class="dg-root" id="dgWidget">
+  <style>
+    #dgWidget {
+      --dg-bg: #eef1ee;
+      --dg-panel: #ffffff;
+      --dg-border: #cdd6cc;
+      --dg-text: #1c231d;
+      --dg-muted: #5c675d;
+      --dg-a: #3d5c3d;
+      --dg-b: #7a2f3d;
+      --dg-bad: #b0432a;
+      --dg-warn: #a67c1f;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--dg-bg);
+      color: var(--dg-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #dgWidget * { box-sizing: border-box; }
+    #dgWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #dgWidget .dg-sub { color: var(--dg-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .dg-body { display: flex; gap: 20px; min-width: 1080px; }
+    .dg-wheel-col { flex: 0 0 auto; }
+    .dg-detail-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+
+    .dg-wheel-wrap { background: var(--dg-panel); border: 1px solid var(--dg-border); border-radius: 10px; padding: 16px; }
+    .dg-wheel-hint { text-align: center; font-size: 0.72rem; color: var(--dg-muted); margin-top: 8px; }
+
+    .dg-card { background: var(--dg-panel); border: 1px solid var(--dg-border); border-radius: 10px; padding: 14px 16px; }
+    .dg-card-title { font-size: 0.72rem; font-weight: 700; color: var(--dg-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+    .dg-lon { font-family: ui-monospace, monospace; font-size: 1.1rem; color: var(--dg-warn); font-weight: 700; }
+
+    .dg-planet-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+    .dg-planet-btn {
+      font-family: inherit; font-size: 0.78rem; padding: 6px 12px; border-radius: 6px;
+      border: 1px solid var(--dg-border); background: var(--dg-bg); color: var(--dg-text); cursor: pointer;
+    }
+    .dg-planet-btn.dg-active { background: var(--dg-b); color: #fff; border-color: var(--dg-b); }
+
+    .dg-dignity-flag { display: inline-block; margin-top: 6px; font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 5px; }
+    .dg-dignity-best { background: rgba(61,92,61,0.16); color: var(--dg-a); }
+    .dg-dignity-good { background: rgba(61,92,61,0.1); color: var(--dg-a); }
+    .dg-dignity-worst { background: rgba(176,67,42,0.14); color: var(--dg-bad); }
+    .dg-dignity-bad { background: rgba(176,67,42,0.08); color: var(--dg-bad); }
+    .dg-dignity-neutral { background: rgba(92,103,93,0.1); color: var(--dg-muted); }
+
+    .dg-meta { font-size: 0.76rem; color: var(--dg-muted); line-height: 1.6; }
+    .dg-meta b { color: var(--dg-text); }
+
+    table.dg-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+    table.dg-table th { text-align: left; color: var(--dg-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--dg-border); font-size: 0.62rem; text-transform: uppercase; }
+    table.dg-table td { padding: 5px 8px; border-bottom: 1px solid var(--dg-border); vertical-align: middle; }
+    .dg-row-active { background: rgba(166,124,31,0.1); }
+
+    .dg-note { font-size: 0.76rem; color: var(--dg-muted); line-height: 1.5; margin-top: 4px; }
+  </style>
+
+  <h3>ഗ്രഹബലം (Planetary Dignity) &amp; ദൃഷ്ടി (Aspects): Play With It</h3>
+  <div class="dg-sub">Pick a graha, then drag the pointer to place it anywhere in the zodiac. Its dignity (exaltation, own sign, Moolatrikona, debilitation, or neutral) and the signs it aspects update live.</div>
+
+  <div class="dg-body">
+    <div class="dg-wheel-col">
+      <div class="dg-wheel-wrap">
+        <svg id="dgSvg" width="380" height="380" viewBox="0 0 380 380"></svg>
+        <div class="dg-wheel-hint">Drag the pointer, or click anywhere on the ring</div>
+      </div>
+    </div>
+    <div class="dg-detail-col">
+      <div class="dg-card">
+        <div class="dg-card-title">Graha</div>
+        <div class="dg-planet-picker" id="dgPlanetPicker"></div>
+      </div>
+      <div class="dg-card">
+        <div class="dg-card-title">Position</div>
+        <div class="dg-lon" id="dgLonText"></div>
+        <div class="dg-meta" id="dgDignityMeta"></div>
+      </div>
+      <div class="dg-card">
+        <div class="dg-card-title">Aspected signs (ദൃഷ്ടി / Drishti)</div>
+        <div class="dg-meta" id="dgAspectMeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dg-card" style="margin-top:16px; min-width:1080px;">
+    <div class="dg-card-title">All 7 classical grahas: exaltation, debilitation &amp; own signs</div>
+    <table class="dg-table" id="dgFullTable">
+      <thead><tr><th>Graha</th><th>Exaltation</th><th>Debilitation</th><th>Moolatrikona</th><th>Own sign(s)</th><th>Special aspects</th></tr></thead>
+      <tbody id="dgTableBody"></tbody>
+    </table>
+  </div>
+  <div class="dg-note" id="dgNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('dgWidget');
+
+    var RASHIS_ML = ['മേടം','ഇടവം','മിഥുനം','കർക്കടകം','ചിങ്ങം','കന്നി','തുലാം','വൃശ്ചികം','ധനു','മകരം','കുംഭം','മീനം'];
+    var RASHIS_EN = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrishchika','Dhanu','Makara','Kumbha','Meena'];
+    var RASHI_EMOJI = ['🐏','🐂','👫','🦀','🦁','👩','⚖️','🦂','🏹','🐊','🏺','🐟'];
+
+    var PLANETS_EN = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+    var PLANETS_ML = ['സൂര്യൻ', 'ചന്ദ്രൻ', 'ചൊവ്വ', 'ബുധൻ', 'വ്യാഴം', 'ശുക്രൻ', 'ശനി'];
+
+    // Cross-checked against multiple independent sources before
+    // shipping. Two figures were corrected from the tutorial-notes
+    // draft against majority sourcing: Moon's Moolatrikona start
+    // (4deg, not 3deg -- it must not overlap Moon's exact 3deg
+    // exaltation peak) and Mercury's Moolatrikona start (15deg,
+    // matching 2 of 3 sources checked, against one outlier's 16deg).
+    var PLANETS = {
+      Sun:     { exaltSign: 0, exaltDeg: 10, debilSign: 6, debilDeg: 10, moolaSign: 4, moolaStart: 0,  moolaEnd: 20, ownSigns: [4] },
+      Moon:    { exaltSign: 1, exaltDeg: 3,  debilSign: 7, debilDeg: 3,  moolaSign: 1, moolaStart: 4,  moolaEnd: 30, ownSigns: [3] },
+      Mars:    { exaltSign: 9, exaltDeg: 28, debilSign: 3, debilDeg: 28, moolaSign: 0, moolaStart: 0,  moolaEnd: 12, ownSigns: [0, 7] },
+      Mercury: { exaltSign: 5, exaltDeg: 15, debilSign: 11,debilDeg: 15, moolaSign: 5, moolaStart: 15, moolaEnd: 20, ownSigns: [2, 5] },
+      Jupiter: { exaltSign: 3, exaltDeg: 5,  debilSign: 9, debilDeg: 5,  moolaSign: 8, moolaStart: 0,  moolaEnd: 10, ownSigns: [8, 11] },
+      Venus:   { exaltSign: 11,exaltDeg: 27, debilSign: 5, debilDeg: 27, moolaSign: 6, moolaStart: 0,  moolaEnd: 15, ownSigns: [1, 6] },
+      Saturn:  { exaltSign: 6, exaltDeg: 20, debilSign: 0, debilDeg: 20, moolaSign: 10,moolaStart: 0,  moolaEnd: 20, ownSigns: [9, 10] }
+    };
+    // Special aspects beyond the universal 7th-sign aspect every planet
+    // casts (counting the planet's own sign as 1st).
+    var SPECIAL_ASPECTS = { Mars: [4, 7, 8], Jupiter: [5, 7, 9], Saturn: [3, 7, 10] };
+    var DEFAULT_ASPECT = [7];
+
+    var RASHI_SPAN = 30;
+
+    function norm(lon) { var x = lon % 360; if (x < 0) x += 360; return x; }
+    function norm12(i) { var x = i % 12; if (x < 0) x += 12; return x; }
+
+    function rashiOf(lonDeg) {
+      var lon = norm(lonDeg);
+      var rashiIdx = Math.floor(lon / RASHI_SPAN) % 12;
+      return { lon: lon, rashiIdx: rashiIdx, rashiDeg: lon - rashiIdx * RASHI_SPAN };
+    }
+
+    // Priority matters: Moolatrikona must be checked before the broad
+    // exaltSign catch-all, since for Moon the Moolatrikona sign
+    // (Taurus) IS the exaltation sign -- a known classical exception.
+    function dignityOf(planetName, signIdx, degIntoSign) {
+      var p = PLANETS[planetName];
+      if (signIdx === p.exaltSign && Math.abs(degIntoSign - p.exaltDeg) < 1e-9) return 'Deep exaltation (Paramochha)';
+      if (signIdx === p.debilSign && Math.abs(degIntoSign - p.debilDeg) < 1e-9) return 'Deep debilitation (Paraneecha)';
+      if (signIdx === p.moolaSign && degIntoSign >= p.moolaStart && degIntoSign < p.moolaEnd) return 'Moolatrikona';
+      if (signIdx === p.exaltSign) return 'Exalted (Ucha)';
+      if (signIdx === p.debilSign) return 'Debilitated (Neecha)';
+      if (p.ownSigns.indexOf(signIdx) >= 0) return 'Own sign (Swakshetra)';
+      return 'Neutral';
+    }
+
+    function dignityClass(dignity) {
+      if (dignity.indexOf('Deep exaltation') === 0) return 'dg-dignity-best';
+      if (dignity.indexOf('Exalted') === 0 || dignity === 'Moolatrikona' || dignity.indexOf('Own sign') === 0) return 'dg-dignity-good';
+      if (dignity.indexOf('Deep debilitation') === 0) return 'dg-dignity-worst';
+      if (dignity.indexOf('Debilitated') === 0) return 'dg-dignity-bad';
+      return 'dg-dignity-neutral';
+    }
+
+    function aspectedSigns(planetName, signIdx) {
+      var offsets = SPECIAL_ASPECTS[planetName] || DEFAULT_ASPECT;
+      var seen = {}, result = [];
+      offsets.forEach(function(n) {
+        var target = norm12(signIdx + (n - 1));
+        if (!seen[target]) { seen[target] = true; result.push(target); }
+      });
+      return result;
+    }
+
+    function fmtDegMin(d) {
+      var deg = Math.floor(d);
+      var min = Math.round((d - deg) * 60);
+      if (min === 60) { min = 0; deg += 1; }
+      return deg + '°' + (min < 10 ? '0' : '') + min + "'";
+    }
+
+    // ---------------- SVG wheel ----------------
+    var svg = document.getElementById('dgSvg');
+    var CX = 190, CY = 190, R_OUTER = 170, R_RASHI_IN = 130, R_LABEL = 150, R_HANDLE = 170;
+
+    function polar(cx, cy, r, angleDeg) {
+      var rad = (angleDeg - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+    function arcPath(r1, r2, a1, a2) {
+      var p1 = polar(CX, CY, r2, a1), p2 = polar(CX, CY, r2, a2);
+      var p3 = polar(CX, CY, r1, a2), p4 = polar(CX, CY, r1, a1);
+      var large = (a2 - a1) > 180 ? 1 : 0;
+      return 'M ' + p1.x + ' ' + p1.y + ' A ' + r2 + ' ' + r2 + ' 0 ' + large + ' 1 ' + p2.x + ' ' + p2.y +
+        ' L ' + p3.x + ' ' + p3.y + ' A ' + r1 + ' ' + r1 + ' 0 ' + large + ' 0 ' + p4.x + ' ' + p4.y + ' Z';
+    }
+    function svgEl(tag, attrs) {
+      var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (var k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    }
+
+    var rashiWedges = [];
+    for (var ri = 0; ri < 12; ri++) {
+      var a1 = ri * 30, a2 = a1 + 30;
+      var wedge = svgEl('path', { d: arcPath(R_RASHI_IN, R_OUTER, a1, a2), fill: ri % 2 === 0 ? '#ffffff' : '#f7f6f2', stroke: '#cdd6cc', 'stroke-width': '1' });
+      svg.appendChild(wedge);
+      rashiWedges.push(wedge);
+      var mid = polar(CX, CY, R_LABEL, a1 + 15);
+      var label = svgEl('text', { x: mid.x, y: mid.y, fill: '#1c231d', 'font-size': '20', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
+      label.textContent = RASHI_EMOJI[ri];
+      svg.appendChild(label);
+    }
+
+    svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: R_RASHI_IN - 8, fill: '#ffffff', stroke: '#cdd6cc' }));
+    var handleLine = svgEl('line', { x1: CX, y1: CY, x2: CX, y2: CY - R_HANDLE, stroke: '#7a2f3d', 'stroke-width': '2' });
+    var handleDot = svgEl('circle', { cx: CX, cy: CY - R_HANDLE, r: 8, fill: '#7a2f3d', stroke: '#1c231d', 'stroke-width': '2', style: 'cursor:grab;' });
+    svg.appendChild(handleLine);
+    svg.appendChild(handleDot);
+
+    var lon = 10; // default: Sun at 10deg Mesha, its own deep-exaltation degree
+    var currentPlanet = 'Sun';
+
+    function setFromAngle(clientX, clientY) {
+      var rect = svg.getBoundingClientRect();
+      var scale = 380 / rect.width;
+      var x = (clientX - rect.left) * scale - CX;
+      var y = (clientY - rect.top) * scale - CY;
+      var angle = Math.atan2(y, x) * 180 / Math.PI + 90;
+      if (angle < 0) angle += 360;
+      lon = angle;
+      render();
+    }
+    var dragging = false;
+    svg.addEventListener('mousedown', function(e) { dragging = true; e.preventDefault(); setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', function(e) { if (dragging) setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', function() { dragging = false; });
+    svg.addEventListener('touchstart', function(e) { dragging = true; var t = e.touches[0]; setFromAngle(t.clientX, t.clientY); }, { passive: true });
+    svg.addEventListener('touchmove', function(e) { if (!dragging) return; var t = e.touches[0]; setFromAngle(t.clientX, t.clientY); }, { passive: true });
+    window.addEventListener('touchend', function() { dragging = false; });
+
+    var pickerEl = document.getElementById('dgPlanetPicker');
+    pickerEl.innerHTML = PLANETS_EN.map(function(name, i) {
+      return '<button type="button" class="dg-planet-btn" data-planet="' + name + '">' + PLANETS_ML[i] + ' <span style="opacity:0.7">(' + name + ')</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(pickerEl.children, function(btn) {
+      btn.addEventListener('click', function() { currentPlanet = btn.getAttribute('data-planet'); render(); });
+    });
+
+    var lonTextEl = document.getElementById('dgLonText');
+    var dignityMetaEl = document.getElementById('dgDignityMeta');
+    var aspectMetaEl = document.getElementById('dgAspectMeta');
+    var tableBody = document.getElementById('dgTableBody');
+
+    function render() {
+      var r = rashiOf(lon);
+      var dignity = dignityOf(currentPlanet, r.rashiIdx, r.rashiDeg);
+      var aspects = aspectedSigns(currentPlanet, r.rashiIdx);
+
+      var pt = polar(CX, CY, R_HANDLE, lon);
+      handleLine.setAttribute('x2', pt.x);
+      handleLine.setAttribute('y2', pt.y);
+      handleDot.setAttribute('cx', pt.x);
+      handleDot.setAttribute('cy', pt.y);
+
+      rashiWedges.forEach(function(w, i) {
+        var isPos = i === r.rashiIdx;
+        var isAspected = aspects.indexOf(i) >= 0;
+        w.setAttribute('fill', isPos ? '#f1e2e5' : (isAspected ? 'rgba(166,124,31,0.16)' : (i % 2 === 0 ? '#ffffff' : '#f7f6f2')));
+        w.setAttribute('stroke', isPos ? '#7a2f3d' : '#cdd6cc');
+      });
+
+      Array.prototype.forEach.call(pickerEl.children, function(btn) {
+        btn.classList.toggle('dg-active', btn.getAttribute('data-planet') === currentPlanet);
+      });
+
+      lonTextEl.textContent = fmtDegMin(r.rashiDeg) + ' ' + RASHIS_ML[r.rashiIdx] + '  (' + fmtDegMin(r.lon) + ' absolute)';
+      dignityMetaEl.innerHTML = '<span class="dg-dignity-flag ' + dignityClass(dignity) + '">' + dignity + '</span>';
+
+      aspectMetaEl.innerHTML = aspects.map(function(a) {
+        return RASHI_EMOJI[a] + ' ' + RASHIS_ML[a] + ' <span style="color:var(--dg-muted); font-size:0.68rem;">(' + RASHIS_EN[a] + ')</span>';
+      }).join('<br>');
+
+      Array.prototype.forEach.call(tableBody.children, function(tr, i) {
+        tr.classList.toggle('dg-row-active', PLANETS_EN[i] === currentPlanet);
+      });
+    }
+
+    tableBody.innerHTML = PLANETS_EN.map(function(name, i) {
+      var p = PLANETS[name];
+      var own = p.ownSigns.map(function(s) { return RASHIS_ML[s] + ' (' + RASHIS_EN[s] + ')'; }).join(', ');
+      var special = SPECIAL_ASPECTS[name] ? SPECIAL_ASPECTS[name].join(', ') + ' (from itself)' : '7 only (universal)';
+      return '<tr><td>' + PLANETS_ML[i] + ' <span style="color:var(--dg-muted); font-size:0.66rem;">(' + name + ')</span></td>' +
+        '<td>' + RASHIS_ML[p.exaltSign] + ' ' + p.exaltDeg + '°</td>' +
+        '<td>' + RASHIS_ML[p.debilSign] + ' ' + p.debilDeg + '°</td>' +
+        '<td>' + RASHIS_ML[p.moolaSign] + ' ' + p.moolaStart + '°–' + p.moolaEnd + '°</td>' +
+        '<td>' + own + '</td>' +
+        '<td>' + special + '</td></tr>';
+    }).join('');
+
+    document.getElementById('dgNote').textContent = 'Covers the 7 classical grahas only -- Rahu/Ketu exaltation is genuinely disputed across traditions and deliberately left out rather than asserted. Exaltation/debilitation degrees, Moolatrikona ranges, own signs, and the Mars/Jupiter/Saturn special aspects follow the standard Parashari framework shared across Jyotisha schools, including Kerala, and were cross-checked against multiple independent sources before publishing. Two figures were corrected from the original tutorial-notes draft against majority sourcing: Moon\'s Moolatrikona start (4 degrees, not 3 -- it must not overlap Moon\'s exact 3-degree exaltation peak) and Mercury\'s Moolatrikona start (15 degrees). If a specific reference text describes a detail differently, that text wins.';
+
+    render();
+  })();
+  </script>
+</div>
