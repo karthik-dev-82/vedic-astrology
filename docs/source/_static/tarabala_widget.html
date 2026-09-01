@@ -1,0 +1,223 @@
+<div class="tb-root" id="tbWidget">
+  <style>
+    #tbWidget {
+      --tb-bg: #eef1ee;
+      --tb-panel: #ffffff;
+      --tb-border: #cdd6cc;
+      --tb-text: #1c231d;
+      --tb-muted: #5c675d;
+      --tb-a: #3d5c3d;
+      --tb-b: #7a2f3d;
+      --tb-bad: #b0432a;
+      --tb-warn: #a67c1f;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--tb-bg);
+      color: var(--tb-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #tbWidget * { box-sizing: border-box; }
+    #tbWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #tbWidget .tb-sub { color: var(--tb-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .tb-body { display: flex; gap: 20px; min-width: 1080px; }
+    .tb-wheel-col { flex: 0 0 auto; }
+    .tb-detail-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+
+    .tb-wheel-wrap { background: var(--tb-panel); border: 1px solid var(--tb-border); border-radius: 10px; padding: 16px; }
+    .tb-wheel-hint { text-align: center; font-size: 0.72rem; color: var(--tb-muted); margin-top: 8px; }
+
+    .tb-card { background: var(--tb-panel); border: 1px solid var(--tb-border); border-radius: 10px; padding: 14px 16px; }
+    .tb-card-title { font-size: 0.72rem; font-weight: 700; color: var(--tb-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+    .tb-nak-name { font-size: 1.05rem; font-weight: 700; color: #1c231d; margin: 4px 0 0; }
+    .tb-nak-name-en { font-size: 0.72rem; color: var(--tb-muted); margin-bottom: 4px; }
+    .tb-meta { font-size: 0.76rem; color: var(--tb-muted); line-height: 1.5; }
+    .tb-meta b { color: var(--tb-text); }
+
+    table.tb-table { width: 100%; border-collapse: collapse; font-size: 0.73rem; }
+    table.tb-table th { text-align: left; color: var(--tb-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--tb-border); font-size: 0.64rem; text-transform: uppercase; }
+    table.tb-table td { padding: 5px 8px; border-bottom: 1px solid var(--tb-border); vertical-align: middle; }
+    .tb-row-janma { background: rgba(122,47,61,0.08); }
+    .tb-tag { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 0.68rem; font-weight: 700; }
+    .tb-tag-auspicious { background: rgba(61,92,61,0.14); color: var(--tb-a); }
+    .tb-tag-inauspicious { background: rgba(176,67,42,0.12); color: var(--tb-bad); }
+    .tb-tag-neutral { background: rgba(166,124,31,0.14); color: var(--tb-warn); }
+
+    .tb-note { font-size: 0.76rem; color: var(--tb-muted); line-height: 1.5; margin-top: 4px; }
+  </style>
+
+  <h3>താരാബലം (Tara Bala): Play With It</h3>
+  <div class="tb-sub">Drag the pointer to set the ജന്മനക്ഷത്രം (Janma Nakshatra, birth star). Every other nakshatra's "Tara" group -- and whether it's traditionally read as auspicious or inauspicious -- is computed live, relative to wherever the pointer sits.</div>
+
+  <div class="tb-body">
+    <div class="tb-wheel-col">
+      <div class="tb-wheel-wrap">
+        <svg id="tbSvg" width="300" height="300" viewBox="0 0 300 300"></svg>
+        <div class="tb-wheel-hint">Drag to set the Janma Nakshatra</div>
+      </div>
+    </div>
+    <div class="tb-detail-col">
+      <div class="tb-card">
+        <div class="tb-card-title">ജന്മനക്ഷത്രം (Janma Nakshatra)</div>
+        <div class="tb-nak-name" id="tbJanmaName"></div>
+        <div class="tb-nak-name-en" id="tbJanmaNameEn"></div>
+        <div class="tb-meta">Every nakshatra's Tara group below is counted relative to this one -- drag the wheel and watch every row's group and tag update.</div>
+      </div>
+      <div class="tb-card">
+        <div class="tb-card-title">The 9 Tara groups (repeat 3 times across the 27 nakshatras)</div>
+        <div class="tb-meta" id="tbGroupsMeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tb-card" style="margin-top:16px; min-width:1080px;">
+    <div class="tb-card-title">All 27 നക്ഷത്രങ്ങൾ, relative to the current Janma Nakshatra</div>
+    <table class="tb-table" id="tbFullTable">
+      <thead><tr><th>#</th><th>Nakshatra</th><th>Distance from Janma</th><th>Tara group</th><th>Traditional reading</th></tr></thead>
+      <tbody id="tbTableBody"></tbody>
+    </table>
+  </div>
+  <div class="tb-note" id="tbNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('tbWidget');
+
+    var NAKSHATRAS_ML = ['അശ്വതി','ഭരണി','കാർത്തിക','രോഹിണി','മകയിരം','തിരുവാതിര','പുണർതം','പൂയം','ആയില്യം',
+      'മകം','പൂരം','ഉത്രം','അത്തം','ചിത്തിര','ചോതി','വിശാഖം','അനിഴം','തൃക്കേട്ട',
+      'മൂലം','പൂരാടം','ഉത്രാടം','തിരുവോണം','അവിട്ടം','ചതയം','പൂരുരുട്ടാതി','ഉത്രത്താതി','രേവതി'];
+    var NAKSHATRAS_EN = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha',
+      'Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha',
+      'Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+
+    var TARA_NAMES_ML = ['ജന്മ', 'സമ്പത്ത്', 'വിപത്ത്', 'ക്ഷേമ', 'പ്രത്യക്', 'സാധന', 'നൈധന', 'മിത്ര', 'പരമ മിത്ര'];
+    var TARA_NAMES_EN = ['Janma', 'Sampat', 'Vipat', 'Kshema', 'Pratyak', 'Sadhana', 'Naidhana', 'Mitra', 'Parama Mitra'];
+    var TARA_AUSPICIOUS = [null, true, false, true, false, true, false, true, true];
+
+    var NAK_SPAN = 360 / 27;
+
+    function norm(lon) { var x = lon % 360; if (x < 0) x += 360; return x; }
+    function norm27(i) { var x = i % 27; if (x < 0) x += 27; return x; }
+
+    function nakOf(lonDeg) {
+      return Math.floor(norm(lonDeg) / NAK_SPAN) % 27;
+    }
+
+    // 1-based inclusive counting: the reference nakshatra itself is
+    // distance 1 (Janma Tara). Verified against an independently
+    // published counting rule (2nd/11th/20th from Janma = Sampat, etc.)
+    // before shipping -- see the Node model tests in the build notes.
+    function taraDistance(fromIdx, toIdx) {
+      return norm27(toIdx - fromIdx) + 1;
+    }
+    function taraGroup(fromIdx, toIdx) {
+      var d = taraDistance(fromIdx, toIdx);
+      var groupIdx = (d - 1) % 9;
+      return { groupIdx: groupIdx, name: TARA_NAMES_EN[groupIdx], auspicious: TARA_AUSPICIOUS[groupIdx], distance: d };
+    }
+
+    // ---------------- SVG wheel (nakshatra ring only) ----------------
+    var svg = document.getElementById('tbSvg');
+    var CX = 150, CY = 150, R_OUTER = 130, R_IN = 92, R_HANDLE = 130;
+
+    function polar(cx, cy, r, angleDeg) {
+      var rad = (angleDeg - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+    function arcPath(r1, r2, a1, a2) {
+      var p1 = polar(CX, CY, r2, a1), p2 = polar(CX, CY, r2, a2);
+      var p3 = polar(CX, CY, r1, a2), p4 = polar(CX, CY, r1, a1);
+      var large = (a2 - a1) > 180 ? 1 : 0;
+      return 'M ' + p1.x + ' ' + p1.y + ' A ' + r2 + ' ' + r2 + ' 0 ' + large + ' 1 ' + p2.x + ' ' + p2.y +
+        ' L ' + p3.x + ' ' + p3.y + ' A ' + r1 + ' ' + r1 + ' 0 ' + large + ' 0 ' + p4.x + ' ' + p4.y + ' Z';
+    }
+    function svgEl(tag, attrs) {
+      var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (var k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    }
+
+    var nakWedges = [];
+    for (var ni = 0; ni < 27; ni++) {
+      var a1 = ni * NAK_SPAN, a2 = a1 + NAK_SPAN;
+      var wedge = svgEl('path', { d: arcPath(R_IN, R_OUTER, a1, a2), fill: ni % 2 === 0 ? '#ffffff' : '#f7f6f2', stroke: '#cdd6cc', 'stroke-width': '1' });
+      svg.appendChild(wedge);
+      nakWedges.push(wedge);
+    }
+    svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: R_IN - 6, fill: '#ffffff', stroke: '#cdd6cc' }));
+    var handleLine = svgEl('line', { x1: CX, y1: CY, x2: CX, y2: CY - R_HANDLE, stroke: '#7a2f3d', 'stroke-width': '2' });
+    var handleDot = svgEl('circle', { cx: CX, cy: CY - R_HANDLE, r: 8, fill: '#7a2f3d', stroke: '#1c231d', 'stroke-width': '2', style: 'cursor:grab;' });
+    svg.appendChild(handleLine);
+    svg.appendChild(handleDot);
+
+    var lon = 0; // default Janma = Ashwini
+
+    function setFromAngle(clientX, clientY) {
+      var rect = svg.getBoundingClientRect();
+      var scale = 300 / rect.width;
+      var x = (clientX - rect.left) * scale - CX;
+      var y = (clientY - rect.top) * scale - CY;
+      var angle = Math.atan2(y, x) * 180 / Math.PI + 90;
+      if (angle < 0) angle += 360;
+      lon = angle;
+      render();
+    }
+    var dragging = false;
+    svg.addEventListener('mousedown', function(e) { dragging = true; e.preventDefault(); setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', function(e) { if (dragging) setFromAngle(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', function() { dragging = false; });
+    svg.addEventListener('touchstart', function(e) { dragging = true; var t = e.touches[0]; setFromAngle(t.clientX, t.clientY); }, { passive: true });
+    svg.addEventListener('touchmove', function(e) { if (!dragging) return; var t = e.touches[0]; setFromAngle(t.clientX, t.clientY); }, { passive: true });
+    window.addEventListener('touchend', function() { dragging = false; });
+
+    var janmaNameEl = document.getElementById('tbJanmaName');
+    var janmaNameEnEl = document.getElementById('tbJanmaNameEn');
+    var tableBody = document.getElementById('tbTableBody');
+
+    function tagHtml(auspicious) {
+      if (auspicious === null) return '<span class="tb-tag tb-tag-neutral">Neutral</span>';
+      return auspicious ? '<span class="tb-tag tb-tag-auspicious">Auspicious</span>' : '<span class="tb-tag tb-tag-inauspicious">Inauspicious</span>';
+    }
+
+    function render() {
+      var janmaIdx = nakOf(lon);
+
+      var pt = polar(CX, CY, R_HANDLE, lon);
+      handleLine.setAttribute('x2', pt.x);
+      handleLine.setAttribute('y2', pt.y);
+      handleDot.setAttribute('cx', pt.x);
+      handleDot.setAttribute('cy', pt.y);
+
+      nakWedges.forEach(function(w, i) {
+        w.setAttribute('fill', i === janmaIdx ? '#f1e2e5' : (i % 2 === 0 ? '#ffffff' : '#f7f6f2'));
+        w.setAttribute('stroke', i === janmaIdx ? '#7a2f3d' : '#cdd6cc');
+      });
+
+      janmaNameEl.textContent = NAKSHATRAS_ML[janmaIdx];
+      janmaNameEnEl.textContent = NAKSHATRAS_EN[janmaIdx] + ' (#' + (janmaIdx + 1) + ')';
+
+      tableBody.innerHTML = NAKSHATRAS_ML.map(function(name, i) {
+        var g = taraGroup(janmaIdx, i);
+        var isJanmaRow = i === janmaIdx;
+        return '<tr class="' + (isJanmaRow ? 'tb-row-janma' : '') + '"><td>' + (i + 1) + '</td>' +
+          '<td>' + name + ' <span style="color:var(--tb-muted); font-size:0.68rem;">(' + NAKSHATRAS_EN[i] + ')</span></td>' +
+          '<td>' + g.distance + '</td>' +
+          '<td>' + TARA_NAMES_ML[g.groupIdx] + ' <span style="color:var(--tb-muted); font-size:0.68rem;">(' + g.name + ')</span></td>' +
+          '<td>' + tagHtml(g.auspicious) + '</td></tr>';
+      }).join('');
+    }
+
+    var groupsMetaEl = document.getElementById('tbGroupsMeta');
+    groupsMetaEl.innerHTML = TARA_NAMES_EN.map(function(name, i) {
+      return '<b>' + (i + 1) + '.</b> ' + TARA_NAMES_ML[i] + ' (' + name + ') -- ' + tagHtml(TARA_AUSPICIOUS[i]);
+    }).join('<br>');
+
+    document.getElementById('tbNote').textContent = 'The counting rule (reference nakshatra itself = distance 1 / Janma Tara, then Sampat, Vipat, Kshema, Pratyak, Sadhana, Naidhana, Mitra, Parama Mitra repeating every 9) and the auspicious/inauspicious classification follow the standard Navatara framework shared across Jyotisha schools, including Kerala -- independently verified before publishing. The "auspicious/inauspicious" tags are the traditional classification this system is built from, not a claim this page is asserting as fact. If a specific reference text describes a detail differently, that text wins.';
+
+    render();
+  })();
+  </script>
+</div>
