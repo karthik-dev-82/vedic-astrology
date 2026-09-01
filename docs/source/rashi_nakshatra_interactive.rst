@@ -1,6 +1,26 @@
 രാശികളും നക്ഷത്രങ്ങളും പാദങ്ങളും (Rashis, Nakshatras & Padas): Play With It
 ================================================================================
 
+.. raw:: html
+
+   <style>
+     @import url('https://fonts.googleapis.com/css2?family=Manjari:wght@100;700&family=Noto+Sans+Malayalam:wght@500&display=swap');
+     div.document h1,
+     div.document h2,
+     div.document p {
+       font-family: 'Manjari', sans-serif;
+       font-weight: 100;
+     }
+     div.document strong {
+       font-family: 'Manjari', sans-serif;
+       font-weight: 700;
+     }
+     div.document table.docutils {
+       font-family: 'Noto Sans Malayalam', sans-serif;
+       font-weight: 500;
+     }
+   </style>
+
 Before any interpretation, Vedic astrology is a coordinate system.
 Every point in the 360-degree zodiac belongs to exactly one of 12
 **രാശികൾ** (rashis, 30 degrees each), one of 27 **നക്ഷത്രങ്ങൾ**

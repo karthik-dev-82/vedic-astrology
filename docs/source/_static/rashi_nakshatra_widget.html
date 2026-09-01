@@ -1,5 +1,6 @@
 <div class="rn-root" id="rnWidget">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manjari:wght@100&family=Noto+Sans+Malayalam:wght@500&display=swap');
     #rnWidget {
       --rn-bg: #0f172a;
       --rn-panel: #16213e;
@@ -61,6 +62,31 @@
     .rn-legend { display: flex; gap: 16px; font-size: 0.7rem; color: var(--rn-muted); margin-top: 8px; flex-wrap: wrap; }
     .rn-legend span { display: inline-flex; align-items: center; gap: 5px; }
     .rn-legend-dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+    /* Malayalam type: Manjari Thin for display/heading text, Noto Sans
+       Malayalam Medium for the dense tables (Thin was tested there first
+       and was too faint at table size -- Medium is the legible middle
+       ground). #rnWidget-prefixed so these outrank the earlier rules
+       they override (e.g. table.rn-table td's monospace font-family). */
+    #rnWidget h3,
+    #rnWidget .rn-sub,
+    #rnWidget .rn-card-title,
+    #rnWidget .rn-info-box .rn-name,
+    #rnWidget .rn-info-box .rn-name-en,
+    #rnWidget .rn-gandantham-flag,
+    #rnWidget .rn-rashi-chip,
+    #rnWidget .rn-note,
+    #rnWidget .rn-wheel-hint,
+    #rnWidget .rn-legend {
+      font-family: 'Manjari', sans-serif;
+      font-weight: 100;
+    }
+
+    #rnWidget table.rn-table,
+    #rnWidget .rn-pada-chip {
+      font-family: 'Noto Sans Malayalam', sans-serif;
+      font-weight: 500;
+    }
   </style>
 
   <h3>രാശികളും നക്ഷത്രങ്ങളും പാദങ്ങളും: Play With It</h3>
