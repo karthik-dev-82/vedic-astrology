@@ -1,5 +1,5 @@
-Vedic Astrology
-===================
+ഗ്രഹബലം (Planetary Dignity) & ദൃഷ്ടി (Aspects): Play With It
+================================================================================
 
 .. raw:: html
 
@@ -125,46 +125,117 @@ Vedic Astrology
      div.document table.docutils tr:last-child td { border-bottom: none; }
    </style>
 
-Personal study notes on Jyotisha (Vedic astrology), with a lean
-toward the Kerala school where source material allows it. Built the
-same way as the reference material this grew out of: real, checkable
-mechanics first, wrapped in a small interactive widget wherever a
-static explanation would leave the actual structure invisible.
+Where a planet sits in the zodiac determines two separate, both fully
+mechanical things: its **ഗ്രഹബലം** (dignity -- how strongly it can
+deliver its promises) and its **ദൃഷ്ടി** (aspects -- which other signs
+it reaches). Neither requires a birth chart or houses to compute --
+both are pure functions of a planet's sign and degree.
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-   :caption: Foundations
+Play With It
+------------------
 
-   rashi_nakshatra_interactive
-   vimshottari_dasha_interactive
-   navamsa_interactive
-   tarabala_interactive
-   dignity_interactive
+Pick a graha, then drag the pointer to place it anywhere in the
+zodiac. Its dignity and the signs it aspects update live -- the
+aspected wedges highlight directly on the wheel.
 
-Foundations
------------------
+.. raw:: html
+   :file: _static/dignity_widget.html
+
+Six Levels of Dignity
+--------------------------
+
+Every classical graha has an exaltation sign+degree and, exactly
+opposite it on the wheel, a debilitation sign at the same degree --
+verified directly: every planet's debilitation sign is 6 signs from
+its exaltation sign, at an identical degree value. Within the
+exaltation sign, a narrower **Moolatrikona** zone marks an
+additional, more specific dignity, and each planet also has one or
+two **own signs**:
+
+.. list-table::
+   :class: longtable
+   :header-rows: 1
+   :widths: 20 30 30 20
+
+   * - Dignity
+     - Where
+     - Strength
+     - Notes
+   * - Deep exaltation (Paramochha)
+     - The exact exaltation degree
+     - Strongest
+     - A single degree, not a range
+   * - Exalted (Ucha)
+     - Anywhere else in the exaltation sign
+     - Strong
+     -
+   * - Moolatrikona
+     - A specific degree-range within one sign
+     - Strong, specific
+     - For 6 of 7 planets, this sign is also an own sign -- Moon is the exception (Moolatrikona in Taurus, but Moon's only own sign is Cancer)
+   * - Own sign (Swakshetra)
+     - Either of a planet's own signs
+     - Comfortable
+     -
+   * - Debilitated (Neecha)
+     - The debilitation sign
+     - Weak
+     -
+   * - Deep debilitation (Paraneecha)
+     - The exact debilitation degree
+     - Weakest
+     - A single degree, not a range
+
+Because Moolatrikona and deep-exaltation can fall in the very same
+sign (Moon's case), the widget checks Moolatrikona before the general
+"exalted" classification -- otherwise Moon's whole 4-30 degree
+Moolatrikona zone in Taurus would be silently swallowed by the
+broader "exalted" label. This ordering bug showed up immediately in
+the model's own assertions before any widget code was written.
+
+ദൃഷ്ടി (Drishti): Special Aspects
+--------------------------------------------------------
+
+Every planet aspects the sign directly opposite it (the 7th sign
+counting inclusively from its own). Three planets cast additional
+aspects:
 
 .. list-table::
    :class: longtable
    :header-rows: 1
    :widths: 25 35 40
 
-   * - Page
-     - What it covers
-     - Key terms
-   * - :doc:`rashi_nakshatra_interactive`
-     - Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live
-     - rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham
-   * - :doc:`vimshottari_dasha_interactive`
-     - Interactive 120-year Vimshottari Dasha timeline -- enter a birth date/time/timezone, get the Moon's real computed sidereal position and a live Mahadasha/Antardasha/Pratyantardasha timeline
-     - Vimshottari, Mahadasha, Antardasha, Pratyantardasha, balance of dasha, ayanamsa
-   * - :doc:`navamsa_interactive`
-     - Interactive Navamsha (D9) wheel -- drag to any longitude and see its D1 rashi and computed D9 sign live, whether it's Vargottama, and the full 12x9 mapping grid
-     - Navamsha, D9, Vargottama, modality, movable, fixed, dual
-   * - :doc:`tarabala_interactive`
-     - Interactive Tara Bala wheel -- drag to set the Janma Nakshatra and see all 27 nakshatras' relative Tara group and traditional auspicious/inauspicious reading update live
-     - Tara Bala, Janma Nakshatra, Navatara, Sampat, Vipat, Kshema
-   * - :doc:`dignity_interactive`
-     - Interactive planetary dignity & aspects wheel -- pick a graha, drag it anywhere in the zodiac, see its exaltation/own-sign/debilitation status and aspected signs live
-     - dignity, exaltation, debilitation, Moolatrikona, own sign, drishti, aspects
+   * - Graha
+     - Special aspects (from itself)
+     - Total signs aspected
+   * - ചൊവ്വ (Mars)
+     - 4th and 8th
+     - 4th, 7th, 8th
+   * - വ്യാഴം (Jupiter)
+     - 5th and 9th
+     - 5th, 7th, 9th
+   * - ശനി (Saturn)
+     - 3rd and 10th
+     - 3rd, 7th, 10th
+
+Every other classical planet aspects only the 7th sign.
+
+Sources & Scope
+--------------------
+
+Covers the 7 classical grahas only -- Rahu and Ketu's exaltation
+signs are genuinely disputed across traditions (some texts place them
+in Taurus/Scorpio, others treat sign-based dignity as not meaningfully
+applicable to the nodes at all), so this page leaves them out rather
+than asserting a contested figure as settled fact. The exaltation and
+debilitation degrees, Moolatrikona ranges, own signs, and the Mars/
+Jupiter/Saturn special aspects follow the standard Parashari framework
+shared across Jyotisha schools, including Kerala, and were
+cross-checked against multiple independent sources before publishing.
+Two Moolatrikona figures were corrected from the tutorial-notes draft
+this page grew out of, against majority sourcing: Moon's Moolatrikona
+start (4 degrees, not 3 -- it must not overlap Moon's exact 3-degree
+exaltation peak) and Mercury's Moolatrikona start (15 degrees, against
+one outlier source's 16). If a specific reference text describes a
+detail differently, that text wins; flag it and this page gets
+corrected.
