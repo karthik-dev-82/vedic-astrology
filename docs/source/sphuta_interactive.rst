@@ -1,5 +1,5 @@
-Vedic Astrology
-===================
+കേരള സ്ഫുടങ്ങൾ (Kerala Sphutas): Play With It
+================================================================================
 
 .. raw:: html
 
@@ -125,54 +125,84 @@ Vedic Astrology
      div.document table.docutils tr:last-child td { border-bottom: none; }
    </style>
 
-Personal study notes on Jyotisha (Vedic astrology), with a lean
-toward the Kerala school where source material allows it. Built the
-same way as the reference material this grew out of: real, checkable
-mechanics first, wrapped in a small interactive widget wherever a
-static explanation would leave the actual structure invisible.
+**സ്ഫുടം** (Sphuta, "a derived point") is the Kerala tradition's term
+for a longitude computed by combining others -- not a planet's real
+position, but an arithmetic point used for diagnosis in Prashna
+(horary) work. This page covers five of them, all pure sums and
+products of three longitudes: ലഗ്നം (Lagna), ചന്ദ്രൻ (Moon), and
+മാണ്ഡി (Mandi).
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-   :caption: Foundations
+Play With It
+------------------
 
-   rashi_nakshatra_interactive
-   vimshottari_dasha_interactive
-   navamsa_interactive
-   tarabala_interactive
-   dignity_interactive
-   jaimini_interactive
-   sphuta_interactive
+Set the three input longitudes and watch all five Sphuta points
+recompute live, along with a built-in consistency check between them.
 
-Foundations
------------------
+.. raw:: html
+   :file: _static/sphuta_widget.html
+
+The Five Sphutas
+--------------------
 
 .. list-table::
    :class: longtable
    :header-rows: 1
    :widths: 25 35 40
 
-   * - Page
-     - What it covers
-     - Key terms
-   * - :doc:`rashi_nakshatra_interactive`
-     - Interactive rashi/nakshatra/pada wheel (Malayalam-first) -- drag to any longitude and see its rashi, nakshatra, pada, both lords, and its Atta split or Gandantham junction live
-     - rashi, nakshatra, pada, rashi lord, nakshatra lord, Atta, Gandantham
-   * - :doc:`vimshottari_dasha_interactive`
-     - Interactive 120-year Vimshottari Dasha timeline -- enter a birth date/time/timezone, get the Moon's real computed sidereal position and a live Mahadasha/Antardasha/Pratyantardasha timeline
-     - Vimshottari, Mahadasha, Antardasha, Pratyantardasha, balance of dasha, ayanamsa
-   * - :doc:`navamsa_interactive`
-     - Interactive Navamsha (D9) wheel -- drag to any longitude and see its D1 rashi and computed D9 sign live, whether it's Vargottama, and the full 12x9 mapping grid
-     - Navamsha, D9, Vargottama, modality, movable, fixed, dual
-   * - :doc:`tarabala_interactive`
-     - Interactive Tara Bala wheel -- drag to set the Janma Nakshatra and see all 27 nakshatras' relative Tara group and traditional auspicious/inauspicious reading update live
-     - Tara Bala, Janma Nakshatra, Navatara, Sampat, Vipat, Kshema
-   * - :doc:`dignity_interactive`
-     - Interactive planetary dignity & aspects wheel -- pick a graha, drag it anywhere in the zodiac, see its exaltation/own-sign/debilitation status and aspected signs live
-     - dignity, exaltation, debilitation, Moolatrikona, own sign, drishti, aspects
-   * - :doc:`jaimini_interactive`
-     - Interactive Chara Karaka ranking and generic Arudha Pada calculator -- covers Arudha Lagna and Upapada Lagna as the same mechanism applied to house 1 and house 12
-     - Chara Karaka, Atmakaraka, Darakaraka, Arudha Lagna, Upapada Lagna, Jaimini
-   * - :doc:`sphuta_interactive`
-     - Interactive Kerala Sphuta calculator -- set Lagna/Moon/Mandi and see all 5 Sphuta points and their built-in consistency check update live
-     - Sphuta, Trisphuta, Prana Sphuta, Deha Sphuta, Mrityu Sphuta, Mandi, Prashna Marga
+   * - Sphuta
+     - Formula
+     - Traditionally represents
+   * - ത്രിസ്ഫുടം (Trisphuta)
+     - Lagna + Moon + Mandi
+     - A composite diagnostic point
+   * - പ്രാണസ്ഫുടം (Prana Sphuta)
+     - Lagna x 9
+     - "Life"
+   * - ദേഹസ്ഫുടം (Deha Sphuta)
+     - Moon x 9
+     - "Body"
+   * - മൃത്യുസ്ഫുടം (Mrityu Sphuta)
+     - Mandi x 9
+     - "Death"
+   * - കാലസ്ഫുടം (Kala Sphuta)
+     - Trisphuta x 9
+     - A composite of the composite
+
+Because multiplying by 9 distributes over the addition that defines
+Trisphuta, Kala Sphuta always equals Prana + Deha + Mrityu Sphuta
+(taken mod 360) -- a structural identity the widget checks live on
+every input change, not just asserted once.
+
+Getting the Formulas Right
+--------------------------------------------------------
+
+The formulas above were cross-checked directly against **M.
+Ramakrishna Bhat's translation of Prashna Marga** ("Essentials of
+Horary Astrology") -- the one genuinely Kerala-school source in this
+project's reference library, written by a scholar tracing an
+unbroken line of Kerala commentators. Two separate passages in that
+single book (pp. 237 and 281) independently state the same "times 9"
+formulas.
+
+This mattered in practice: a tutorial-notes draft this page grew out
+of claimed different, more complicated formulas for three of these
+five points (a mix of multiplication and subtraction involving
+Gulika). None of that matched the actual source text -- the real
+formulas are the much simpler "multiply by 9" pattern shown above.
+Rather than adjust the wrong numbers, they were discarded entirely
+once the primary source was checked directly, which is exactly why
+this page cites the source book by name instead of the tutorial notes
+it started from.
+
+Sources & Scope
+--------------------
+
+Mandi (called Gulika in some other traditions -- the two terms are
+not always used identically, and this book uses "Mandi" as its
+primary term) is itself computed from birth weekday and the day/night
+duration split into 8 parts -- a real, deterministic calculation, but
+one this site does not yet perform, so Lagna, Moon, and Mandi are
+manual inputs here rather than derived from an actual birth time and
+place. That's a natural future page, not a gap papered over. If a
+specific reference text describes a detail differently, that text
+wins; flag it and this page gets corrected.

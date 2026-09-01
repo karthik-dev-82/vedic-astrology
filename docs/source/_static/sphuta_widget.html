@@ -1,0 +1,155 @@
+<div class="sp-root" id="spWidget">
+  <style>
+    #spWidget {
+      --sp-bg: #eef1ee;
+      --sp-panel: #ffffff;
+      --sp-border: #cdd6cc;
+      --sp-text: #1c231d;
+      --sp-muted: #5c675d;
+      --sp-a: #3d5c3d;
+      --sp-b: #7a2f3d;
+      --sp-bad: #b0432a;
+      --sp-warn: #a67c1f;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--sp-bg);
+      color: var(--sp-text);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      box-sizing: border-box;
+      overflow-x: auto;
+    }
+    #spWidget * { box-sizing: border-box; }
+    #spWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
+    #spWidget .sp-sub { color: var(--sp-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+    .sp-body { display: flex; gap: 20px; min-width: 1080px; }
+    .sp-input-col { flex: 0 0 280px; display: flex; flex-direction: column; gap: 12px; }
+    .sp-output-col { flex: 1 1 auto; min-width: 0; }
+
+    .sp-card { background: var(--sp-panel); border: 1px solid var(--sp-border); border-radius: 10px; padding: 14px 16px; }
+    .sp-card-title { font-size: 0.72rem; font-weight: 700; color: var(--sp-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+
+    .sp-field { margin-bottom: 12px; }
+    .sp-field label { display: block; font-size: 0.78rem; margin-bottom: 4px; }
+    .sp-field input[type="range"] { width: 100%; }
+    .sp-field .sp-deg-val { font-family: ui-monospace, monospace; font-size: 0.82rem; color: var(--sp-warn); font-weight: 700; }
+
+    table.sp-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    table.sp-table th { text-align: left; color: var(--sp-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--sp-border); font-size: 0.64rem; text-transform: uppercase; }
+    table.sp-table td { padding: 8px 8px; border-bottom: 1px solid var(--sp-border); vertical-align: top; }
+    table.sp-table td.sp-val { font-family: ui-monospace, monospace; color: var(--sp-b); font-weight: 700; }
+    .sp-formula { font-family: ui-monospace, monospace; font-size: 0.72rem; color: var(--sp-muted); }
+
+    .sp-check { margin-top: 10px; font-size: 0.76rem; padding: 8px 12px; border-radius: 6px; background: rgba(61,92,61,0.1); color: var(--sp-a); }
+    .sp-note { font-size: 0.76rem; color: var(--sp-muted); line-height: 1.5; margin-top: 4px; }
+  </style>
+
+  <h3>കേരള സ്ഫുടങ്ങൾ (Kerala Sphutas): Play With It</h3>
+  <div class="sp-sub">Set the Lagna, Moon, and മാണ്ഡി (Mandi) longitudes to compute the five Sphuta points live -- all of them are pure arithmetic on these three inputs, nothing more.</div>
+
+  <div class="sp-body">
+    <div class="sp-input-col">
+      <div class="sp-card">
+        <div class="sp-card-title">Inputs</div>
+        <div class="sp-field">
+          <label>ലഗ്നം (Lagna) <span class="sp-deg-val" id="spLagnaVal"></span></label>
+          <input type="range" id="spLagna" min="0" max="360" step="1" value="45">
+        </div>
+        <div class="sp-field">
+          <label>ചന്ദ്രൻ (Moon) <span class="sp-deg-val" id="spMoonVal"></span></label>
+          <input type="range" id="spMoon" min="0" max="360" step="1" value="140">
+        </div>
+        <div class="sp-field">
+          <label>മാണ്ഡി (Mandi) <span class="sp-deg-val" id="spMandiVal"></span></label>
+          <input type="range" id="spMandi" min="0" max="360" step="1" value="260">
+        </div>
+      </div>
+      <div class="sp-check" id="spCheck"></div>
+    </div>
+    <div class="sp-output-col">
+      <div class="sp-card">
+        <div class="sp-card-title">The 5 Sphuta points</div>
+        <table class="sp-table">
+          <thead><tr><th>Sphuta</th><th>Formula</th><th>Value</th></tr></thead>
+          <tbody id="spTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sp-note" id="spNote"></div>
+
+  <script>
+  (function() {
+    var root = document.getElementById('spWidget');
+
+    function norm360(x) { var r = x % 360; if (r < 0) r += 360; return r; }
+
+    // Verified directly against M. Ramakrishna Bhat's translation of
+    // Prashna Marga ("Essentials of Horary Astrology"), pp. 237 and
+    // 281 -- two independent passages in the same source agree on
+    // these exact formulas. A prior tutorial-notes draft claimed
+    // different, more complex formulas (Lagna x5 - Gulika, Moon x8 -
+    // Gulika, Sun x9 - Gulika) that do not match the actual source
+    // text at all and have been discarded entirely, not just adjusted.
+    function trisphuta(lagna, moon, mandi) { return norm360(lagna + moon + mandi); }
+    function pranaSphuta(lagna) { return norm360(lagna * 9); }
+    function dehaSphuta(moon) { return norm360(moon * 9); }
+    function mrityuSphuta(mandi) { return norm360(mandi * 9); }
+    function kalaSphuta(tri) { return norm360(tri * 9); }
+
+    function fmtDegMin(d) {
+      var deg = Math.floor(d);
+      var min = Math.round((d - deg) * 60);
+      if (min === 60) { min = 0; deg += 1; }
+      return deg + '°' + (min < 10 ? '0' : '') + min + "'";
+    }
+
+    var lagnaSlider = document.getElementById('spLagna');
+    var moonSlider = document.getElementById('spMoon');
+    var mandiSlider = document.getElementById('spMandi');
+    var lagnaValEl = document.getElementById('spLagnaVal');
+    var moonValEl = document.getElementById('spMoonVal');
+    var mandiValEl = document.getElementById('spMandiVal');
+    var tableBody = document.getElementById('spTableBody');
+    var checkEl = document.getElementById('spCheck');
+
+    function render() {
+      var lagna = parseFloat(lagnaSlider.value);
+      var moon = parseFloat(moonSlider.value);
+      var mandi = parseFloat(mandiSlider.value);
+
+      lagnaValEl.textContent = fmtDegMin(lagna);
+      moonValEl.textContent = fmtDegMin(moon);
+      mandiValEl.textContent = fmtDegMin(mandi);
+
+      var tri = trisphuta(lagna, moon, mandi);
+      var prana = pranaSphuta(lagna);
+      var deha = dehaSphuta(moon);
+      var mrityu = mrityuSphuta(mandi);
+      var kala = kalaSphuta(tri);
+
+      var rows = [
+        ['ത്രിസ്ഫുടം (Trisphuta)', 'Lagna + Moon + Mandi', tri],
+        ['പ്രാണസ്ഫുടം (Prana Sphuta) -- "life"', 'Lagna &times; 9', prana],
+        ['ദേഹസ്ഫുടം (Deha Sphuta) -- "body"', 'Moon &times; 9', deha],
+        ['മൃത്യുസ്ഫുടം (Mrityu Sphuta) -- "death"', 'Mandi &times; 9', mrityu],
+        ['കാലസ്ഫുടം (Kala Sphuta)', 'Trisphuta &times; 9', kala]
+      ];
+      tableBody.innerHTML = rows.map(function(r) {
+        return '<tr><td>' + r[0] + '</td><td class="sp-formula">' + r[1] + '</td><td class="sp-val">' + fmtDegMin(r[2]) + '</td></tr>';
+      }).join('');
+
+      var sumOfThree = norm360(prana + deha + mrityu);
+      var matches = Math.abs(sumOfThree - kala) < 1e-6;
+      checkEl.textContent = (matches ? '✓ ' : '✗ ') + 'Consistency check: Kala Sphuta (' + fmtDegMin(kala) + ') = Prana + Deha + Mrityu Sphuta (' + fmtDegMin(sumOfThree) + ') -- holds because multiplying by 9 distributes over the addition that defines Trisphuta.';
+    }
+
+    [lagnaSlider, moonSlider, mandiSlider].forEach(function(s) { s.addEventListener('input', render); });
+
+    document.getElementById('spNote').textContent = 'Formulas verified directly against M. Ramakrishna Bhat’s translation of Prashna Marga ("Essentials of Horary Astrology"), the one genuinely Kerala-school text in this project’s reference library -- not against a secondary tutorial summary, whose figures for these same five points turned out not to match the source text at all. Mandi (also called Gulika in some traditions) is itself computed from birth weekday and day/night duration -- a real, deterministic calculation, but one this widget does not yet perform, so its longitude is a manual input here rather than derived from a birth time. If a specific reference text describes a detail differently, that text wins.';
+
+    render();
+  })();
+  </script>
+</div>
