@@ -1,15 +1,15 @@
 <div class="rn-root" id="rnWidget">
   <style>
     #rnWidget {
-      --rn-bg: #0f172a;
-      --rn-panel: #16213e;
-      --rn-border: #2a3655;
-      --rn-text: #e2e8f0;
-      --rn-muted: #94a3b8;
-      --rn-accent: #38bdf8;
-      --rn-good: #4ade80;
-      --rn-warn: #fbbf24;
-      --rn-bad: #f87171;
+      --rn-bg: #eef1ee;
+      --rn-panel: #ffffff;
+      --rn-border: #cdd6cc;
+      --rn-text: #1c231d;
+      --rn-muted: #5c675d;
+      --rn-accent: #7a2f3d;
+      --rn-good: #3d5c3d;
+      --rn-warn: #a67c1f;
+      --rn-bad: #b0432a;
       font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--rn-bg);
       color: var(--rn-text);
@@ -20,7 +20,7 @@
       overflow-x: auto;
     }
     #rnWidget * { box-sizing: border-box; }
-    #rnWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #fff; }
+    #rnWidget h3 { margin: 0 0 4px; font-size: 1.15rem; color: #7a2f3d; font-family: Georgia, "Iowan Old Style", serif; }
     #rnWidget .rn-sub { color: var(--rn-muted); font-size: 0.85rem; margin-bottom: 16px; }
 
     .rn-body { display: flex; gap: 20px; min-width: 1080px; }
@@ -37,24 +37,24 @@
     .rn-info-row { display: flex; gap: 16px; }
     .rn-info-box { flex: 1; background: var(--rn-bg); border: 1px solid var(--rn-border); border-radius: 8px; padding: 10px 12px; }
     .rn-info-box .rn-symbol { font-size: 1.6rem; }
-    .rn-info-box .rn-name { font-size: 1.05rem; font-weight: 700; color: #fff; margin: 4px 0 0; }
+    .rn-info-box .rn-name { font-size: 1.05rem; font-weight: 700; color: #1c231d; margin: 4px 0 0; }
     .rn-info-box .rn-name-en { font-size: 0.72rem; color: var(--rn-muted); margin-bottom: 4px; }
     .rn-info-box .rn-meta { font-size: 0.74rem; color: var(--rn-muted); line-height: 1.5; }
     .rn-info-box .rn-meta b { color: var(--rn-text); }
-    .rn-gandantham-flag { display: inline-block; margin-top: 6px; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: rgba(248,113,113,0.18); color: var(--rn-bad); }
+    .rn-gandantham-flag { display: inline-block; margin-top: 6px; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: rgba(176,67,42,0.14); color: var(--rn-bad); }
 
     table.rn-table { width: 100%; border-collapse: collapse; font-size: 0.73rem; }
     table.rn-table th { text-align: left; color: var(--rn-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--rn-border); font-size: 0.64rem; text-transform: uppercase; }
-    table.rn-table td { padding: 5px 8px; border-bottom: 1px solid rgba(42,54,85,0.5); font-family: ui-monospace, monospace; vertical-align: middle; }
-    .rn-pada-chip { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 0.68rem; margin: 1px; background: rgba(56,189,248,0.14); color: var(--rn-accent); }
-    .rn-pada-chip.rn-gandantham { background: rgba(248,113,113,0.22); color: var(--rn-bad); font-weight: 700; }
-    .rn-row-active { background: rgba(251,191,36,0.08); }
-    .rn-split-tag { font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(74,222,128,0.16); color: var(--rn-good); white-space: nowrap; }
+    table.rn-table td { padding: 5px 8px; border-bottom: 1px solid var(--rn-border); font-family: ui-monospace, monospace; vertical-align: middle; }
+    .rn-pada-chip { display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 0.68rem; margin: 1px; background: rgba(122,47,61,0.1); color: var(--rn-accent); }
+    .rn-pada-chip.rn-gandantham { background: rgba(176,67,42,0.16); color: var(--rn-bad); font-weight: 700; }
+    .rn-row-active { background: rgba(166,124,31,0.1); }
+    .rn-split-tag { font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: rgba(61,92,61,0.14); color: var(--rn-good); white-space: nowrap; }
     .rn-split-none { color: var(--rn-muted); }
 
     .rn-rashi-mini { display: flex; flex-wrap: wrap; gap: 6px; }
     .rn-rashi-chip { background: var(--rn-bg); border: 1px solid var(--rn-border); border-radius: 6px; padding: 6px 10px; font-size: 0.74rem; display: flex; align-items: center; gap: 6px; }
-    .rn-rashi-chip b { color: #fff; }
+    .rn-rashi-chip b { color: #1c231d; }
     .rn-rashi-chip .rn-chip-en { color: var(--rn-muted); font-size: 0.68rem; }
 
     .rn-note { font-size: 0.76rem; color: var(--rn-muted); line-height: 1.5; margin-top: 4px; }
@@ -114,8 +114,8 @@
       <tbody id="rnTableBody"></tbody>
     </table>
     <div class="rn-legend">
-      <span><i class="rn-legend-dot" style="background:rgba(56,189,248,0.5)"></i>rashi at this pada</span>
-      <span><i class="rn-legend-dot" style="background:rgba(248,113,113,0.6)"></i>ഗണ്ഡാന്തം (Gandantham) pada</span>
+      <span><i class="rn-legend-dot" style="background:rgba(122,47,61,0.45)"></i>rashi at this pada</span>
+      <span><i class="rn-legend-dot" style="background:rgba(176,67,42,0.5)"></i>ഗണ്ഡാന്തം (Gandantham) pada</span>
     </div>
   </div>
   <div class="rn-card" style="margin-top:16px; min-width:1080px;">
@@ -243,13 +243,13 @@
       var a1 = ri * 30, a2 = a1 + 30;
       var wedge = svgEl('path', {
         d: arcPath(R_RASHI_IN, R_OUTER, a1, a2),
-        fill: ri % 2 === 0 ? '#1e2a4a' : '#182240',
-        stroke: '#2a3655', 'stroke-width': '1'
+        fill: ri % 2 === 0 ? '#ffffff' : '#f7f6f2',
+        stroke: '#cdd6cc', 'stroke-width': '1'
       });
       svg.appendChild(wedge);
       rashiWedges.push(wedge);
       var mid = polar(CX, CY, R_LABEL, a1 + 15);
-      var label = svgEl('text', { x: mid.x, y: mid.y, fill: '#e2e8f0', 'font-size': '20', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
+      var label = svgEl('text', { x: mid.x, y: mid.y, fill: '#1c231d', 'font-size': '20', 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
       label.textContent = RASHI_EMOJI[ri];
       svg.appendChild(label);
     }
@@ -260,17 +260,17 @@
       var isGandanthamStart = (ni % 9) === 0;
       var t1 = polar(CX, CY, R_RASHI_IN - 4, ta);
       var t2 = polar(CX, CY, R_RASHI_IN + 4, ta);
-      svg.appendChild(svgEl('line', { x1: t1.x, y1: t1.y, x2: t2.x, y2: t2.y, stroke: isGandanthamStart ? '#f87171' : '#64748b', 'stroke-width': isGandanthamStart ? '2' : '1' }));
+      svg.appendChild(svgEl('line', { x1: t1.x, y1: t1.y, x2: t2.x, y2: t2.y, stroke: isGandanthamStart ? '#b0432a' : '#5c675d', 'stroke-width': isGandanthamStart ? '2' : '1' }));
     }
 
     // active nakshatra highlight arc (updated on drag)
-    var nakHighlight = svgEl('path', { fill: 'rgba(251,191,36,0.28)', stroke: 'none' });
+    var nakHighlight = svgEl('path', { fill: 'rgba(166,124,31,0.22)', stroke: 'none' });
     svg.insertBefore(nakHighlight, svg.firstChild.nextSibling);
 
     // center + handle
-    svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: R_RASHI_IN - 8, fill: '#0f172a', stroke: '#2a3655' }));
-    var handleLine = svgEl('line', { x1: CX, y1: CY, x2: CX, y2: CY - R_HANDLE, stroke: '#38bdf8', 'stroke-width': '2' });
-    var handleDot = svgEl('circle', { cx: CX, cy: CY - R_HANDLE, r: 8, fill: '#38bdf8', stroke: '#041322', 'stroke-width': '2', style: 'cursor:grab;' });
+    svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: R_RASHI_IN - 8, fill: '#ffffff', stroke: '#cdd6cc' }));
+    var handleLine = svgEl('line', { x1: CX, y1: CY, x2: CX, y2: CY - R_HANDLE, stroke: '#7a2f3d', 'stroke-width': '2' });
+    var handleDot = svgEl('circle', { cx: CX, cy: CY - R_HANDLE, r: 8, fill: '#7a2f3d', stroke: '#1c231d', 'stroke-width': '2', style: 'cursor:grab;' });
     svg.appendChild(handleLine);
     svg.appendChild(handleDot);
 
@@ -303,8 +303,8 @@
       nakHighlight.setAttribute('d', arcPath(R_RASHI_IN - 8, R_RASHI_IN, nakStart, nakStart + NAK_SPAN));
 
       rashiWedges.forEach(function(w, i) {
-        w.setAttribute('fill', i === c.rashiIdx ? '#2a3f6b' : (i % 2 === 0 ? '#1e2a4a' : '#182240'));
-        w.setAttribute('stroke', i === c.rashiIdx ? '#38bdf8' : '#2a3655');
+        w.setAttribute('fill', i === c.rashiIdx ? '#f1e2e5' : (i % 2 === 0 ? '#ffffff' : '#f7f6f2'));
+        w.setAttribute('stroke', i === c.rashiIdx ? '#7a2f3d' : '#cdd6cc');
       });
 
       lonTextEl.textContent = fmtDegMin(c.rashiDeg) + ' ' + RASHIS_ML[c.rashiIdx] + '  (' + fmtDegMin(c.lon) + ' absolute)';
