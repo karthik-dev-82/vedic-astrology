@@ -7,7 +7,7 @@
      @import url('https://fonts.googleapis.com/css2?family=Manjari:wght@100;700&family=Noto+Sans+Malayalam:wght@500&display=swap');
      div.document {
        background: #eef1ee;
-       color: #1c231d;
+       color: #000000;
        font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
        line-height: 1.68;
        font-size: 17px;
@@ -54,7 +54,7 @@
      }
      div.document .headerlink:hover { opacity: 1; }
      div.document p { margin: 0 0 17px; }
-     div.document strong { color: #1c231d; font-weight: 700; }
+     div.document strong { color: #000000; font-weight: 700; }
      div.document a { color: #7a2f3d; text-decoration: underline; text-decoration-color: #7a2f3d55; text-underline-offset: 2px; }
      div.document a:hover { text-decoration-color: #7a2f3d; }
      div.document ul, div.document ol { margin: 0 0 17px; padding-left: 26px; }
