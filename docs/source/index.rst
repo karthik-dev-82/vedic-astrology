@@ -145,6 +145,7 @@ static explanation would leave the actual structure invisible.
    sphuta_interactive
    ashtakavarga_interactive
    gulika_interactive
+   panchanga_interactive
 
 Foundations
 -----------------
@@ -184,3 +185,6 @@ Foundations
    * - :doc:`gulika_interactive`
      - Interactive Gulika/Mandi calculator -- enter a real birth date/time/place, get real sunrise/sunset and a computed Ascendant at Saturn's weekday segment, verified by independent astronomical derivation
      - Gulika, Mandi, Upagraha, Ascendant, sunrise, sunset, weekday lord
+   * - :doc:`panchanga_interactive`
+     - Interactive Panchanga Tithi & Yoga calculator -- enter a date/time/timezone, get real sidereal Sun/Moon longitudes and the current Tithi and Yoga live, plus a sidereal-vs-tropical comparison showing why Yoga needs the ayanamsa and Tithi doesn't
+     - Panchanga, Tithi, Yoga, Paksha, ayanamsa, nirayana
