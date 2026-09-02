@@ -190,15 +190,15 @@ lord cycle, the same cycle Vimshottari Dasha is built on:
      - Split
      - Nakshatras
      - Shared lord
-   * - തലയറ്റ (Thala-atta)
+   * - തലയറ്റത് (Thalayattathu / Headless)
      - 1 : 3
      - കാർത്തിക (Krittika), ഉത്രം (Uttara Phalguni), ഉത്രാടം (Uttara Ashadha)
      - സൂര്യൻ (Sun)
-   * - നടുവറ്റ (Naduv-atta)
+   * - ഉടലറ്റത് (Udalattathu / Body severed)
      - 2 : 2
      - മകയിരം (Mrigashira), ചിത്തിര (Chitra), അവിട്ടം (Dhanishta)
      - ചൊവ്വ (Mars)
-   * - കാലറ്റ (Kaal-atta)
+   * - കാലറ്റത് (Kaalattathu / Leg severed)
      - 3 : 1
      - പുണർതം (Punarvasu), വിശാഖം (Vishakha), പൂരുരുട്ടാതി (Purva Bhadrapada)
      - വ്യാഴം (Jupiter)

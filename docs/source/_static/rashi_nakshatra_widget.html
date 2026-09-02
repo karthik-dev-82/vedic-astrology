@@ -196,9 +196,9 @@
     // separate hardcoded lookup -- see rn-note / the page text for why
     function attaType(nakIdx) {
       var pos = nakIdx % 9;
-      if (pos === 2) return { type: 'thala', ratio: [1, 3], label: 'തലയറ്റ 1:3' };
-      if (pos === 4) return { type: 'naduv', ratio: [2, 2], label: 'നടുവറ്റ 2:2' };
-      if (pos === 6) return { type: 'kaal', ratio: [3, 1], label: 'കാലറ്റ 3:1' };
+      if (pos === 2) return { type: 'thala', ratio: [1, 3], label: 'തലയറ്റത് 1:3' };
+      if (pos === 4) return { type: 'naduv', ratio: [2, 2], label: 'ഉടലറ്റത് 2:2' };
+      if (pos === 6) return { type: 'kaal', ratio: [3, 1], label: 'കാലറ്റത് 3:1' };
       return null;
     }
 
@@ -416,9 +416,9 @@
     // ---------------- Atta / Gandantham summary ----------------
     var summaryEl = document.getElementById('rnAttaGandanthamSummary');
     var attaRows = [
-      { key: 'thala', label: 'തലയറ്റ (Thala-atta) 1:3' },
-      { key: 'naduv', label: 'നടുവറ്റ (Naduv-atta) 2:2' },
-      { key: 'kaal', label: 'കാലറ്റ (Kaal-atta) 3:1' }
+      { key: 'thala', label: 'തലയറ്റത് (Thalayattathu) 1:3' },
+      { key: 'naduv', label: 'ഉടലറ്റത് (Udalattathu) 2:2' },
+      { key: 'kaal', label: 'കാലറ്റത് (Kaalattathu) 3:1' }
     ];
     var attaHtml = '<table class="rn-table"><thead><tr><th>Split</th><th>Nakshatras</th><th>Shared lord</th></tr></thead><tbody>' +
       attaRows.map(function(row) {
